@@ -29,7 +29,11 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreVersionn"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
 
     androidTestImplementation "androidx.test.ext:junit:$textExtVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
