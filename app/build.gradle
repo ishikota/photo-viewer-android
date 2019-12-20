@@ -1,8 +1,21 @@
+import org.apache.commons.codec.binary.Base64
+
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+
+static def stringLiteral(String s) {
+    if (s == null) {
+        return "null"
+    } else {
+        def encoded = Base64.encodeBase64(s.getBytes())
+        return "new String(android.util.Base64.decode(new byte[]{${encoded.toList().join(",")}}, android.util.Base64.DEFAULT)) /* ${s} */"
+    }
+}
+
+def secretPropertiesFile = rootProject.file("secret.properties")
+def secretProperties = new Properties()
+secretProperties.load(new FileInputStream(secretPropertiesFile))
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -13,6 +26,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Define static constants for app
+        buildConfigField "String", "APP_ACCESS_KEY",
+                stringLiteral(secretProperties['accesskey'])
+        buildConfigField "String", "APP_SECRET_KEY",
+                stringLiteral(secretProperties['secretkey'])
     }
     buildTypes {
         release {
