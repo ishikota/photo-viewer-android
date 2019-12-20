@@ -1,4 +1,4 @@
-package com.ishikota.photo_viewer_android
+package com.ishikota.photoviewerandroid
 
 import org.junit.Test
 

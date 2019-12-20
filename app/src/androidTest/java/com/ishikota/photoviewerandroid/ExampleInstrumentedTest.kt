@@ -1,4 +1,4 @@
-package com.ishikota.photo_viewer_android
+package com.ishikota.photoviewerandroid
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.ishikota.photo_viewer_android", appContext.packageName)
+        assertEquals("com.ishikota.photoviewerandroid", appContext.packageName)
     }
 }
