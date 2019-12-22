@@ -1,8 +1,22 @@
+import org.apache.commons.codec.binary.Base64
+
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+static def stringLiteral(String s) {
+    if (s == null) {
+        return "null"
+    } else {
+        def encoded = Base64.encodeBase64(s.getBytes())
+        return "new String(android.util.Base64.decode(new byte[]{${encoded.toList().join(",")}}, android.util.Base64.DEFAULT)) /* ${s} */"
+    }
+}
+
+def secretPropertiesFile = rootProject.file("secret.properties")
+def secretProperties = new Properties()
+secretProperties.load(new FileInputStream(secretPropertiesFile))
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -13,6 +27,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Define static constants for app
+        buildConfigField "String", "APP_ACCESS_KEY",
+                stringLiteral(secretProperties['accesskey'])
+        buildConfigField "String", "APP_SECRET_KEY",
+                stringLiteral(secretProperties['secretkey'])
+        buildConfigField "String", "API_ENDPOINT",
+                stringLiteral("https://api.unsplash.com/")
     }
     buildTypes {
         release {
@@ -25,14 +47,26 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.core:core-ktx:$coreVersionn"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 
+    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
+
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.squareup.moshi:moshi:$moshiversion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiversion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
     implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
 
     debugImplementation "com.facebook.flipper:flipper:$flipperVersion"
     debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipperVersion"

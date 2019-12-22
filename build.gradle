@@ -26,12 +26,17 @@ buildscript {
         timberVersion = '4.7.1'
         flipperVersion = '0.30.1'
         soloaderVersion = '0.6.0'
+        rxjavaVersion = '2.2.16'
+        rxandroidVersion = '2.1.1'
+        moshiversion = '1.9.2'
+        retrofitVersion = '2.6.2'
+        threetenabpVersion = '1.2.0'
     }
 
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$androidGradlePluginVersion"
@@ -45,7 +50,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+
     }
 }
 
