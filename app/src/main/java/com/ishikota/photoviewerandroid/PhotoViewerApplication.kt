@@ -1,6 +1,7 @@
 package com.ishikota.photoviewerandroid
 
 import android.app.Application
+import com.ishikota.photoviewerandroid.infra.flipper.FlipperWrapper
 import com.ishikota.photoviewerandroid.infra.timber.ConsoleDebugTree
 import timber.log.Timber
 
@@ -11,5 +12,6 @@ class PhotoViewerApplication: Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(ConsoleDebugTree())
         }
+        FlipperWrapper.initialize(this)
     }
 }
