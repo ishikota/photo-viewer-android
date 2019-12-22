@@ -64,6 +64,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
 
     implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
 
     debugImplementation "com.facebook.flipper:flipper:$flipperVersion"
     debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipperVersion"

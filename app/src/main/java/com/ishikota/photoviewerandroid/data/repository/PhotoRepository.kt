@@ -3,9 +3,9 @@ package com.ishikota.photoviewerandroid.data.repository
 import com.ishikota.photoviewerandroid.BuildConfig
 import com.ishikota.photoviewerandroid.data.api.PhotoViewerService
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
+import com.ishikota.photoviewerandroid.infra.moshi.buildDefaultMoshi
 import com.ishikota.photoviewerandroid.infra.okhttp.ApiAccessKeyInterceptor
 import com.ishikota.photoviewerandroid.infra.okhttp.buildDefaultOkHttpClient
-import com.squareup.moshi.Moshi
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -23,7 +23,7 @@ interface PhotoRepository {
 
     object Factory {
         fun create() : PhotoRepository {
-            val moshi = Moshi.Builder().build()
+            val moshi = buildDefaultMoshi()
             val okHttpClient = buildDefaultOkHttpClient()
                 .newBuilder()
                 .addInterceptor(ApiAccessKeyInterceptor(BuildConfig.APP_ACCESS_KEY))

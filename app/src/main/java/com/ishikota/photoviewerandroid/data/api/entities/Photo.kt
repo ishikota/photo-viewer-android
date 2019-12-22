@@ -2,12 +2,13 @@ package com.ishikota.photoviewerandroid.data.api.entities
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.threeten.bp.OffsetDateTime
 
 @JsonClass(generateAdapter = true)
 data class Photo(
     @Json(name = "id") val id: String,
-    @Json(name = "created_at") val createdAt: String,
-    @Json(name = "updated_at") val updatedAt: String,
+    @Json(name = "created_at") val createdAt: OffsetDateTime,
+    @Json(name = "updated_at") val updatedAt: OffsetDateTime,
     @Json(name = "width") val width: Int,
     @Json(name = "height") val height: Int,
     @Json(name = "color") val color: String,
