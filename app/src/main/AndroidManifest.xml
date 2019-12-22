@@ -4,6 +4,7 @@
     package="com.ishikota.photoviewerandroid">
 
     <application
+        android:name=".PhotoViewerApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
