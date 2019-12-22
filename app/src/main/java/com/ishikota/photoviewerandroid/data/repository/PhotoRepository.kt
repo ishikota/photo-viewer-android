@@ -29,7 +29,7 @@ interface PhotoRepository {
                 .addInterceptor(ApiAccessKeyInterceptor(BuildConfig.APP_ACCESS_KEY))
                 .build()
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.unsplash.com/")
+                .baseUrl(BuildConfig.API_ENDPOINT)
                 .client(okHttpClient)
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
