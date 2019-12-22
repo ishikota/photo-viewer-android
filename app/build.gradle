@@ -34,6 +34,11 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
+    debugImplementation "com.facebook.flipper:flipper:$flipperVersion"
+    debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipperVersion"
+    debugImplementation "com.facebook.soloader:soloader:$soloaderVersion"
+    releaseImplementation "com.facebook.flipper:flipper-noop:$flipperVersion"
+
     testImplementation "androidx.test:core:$testCoreVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
