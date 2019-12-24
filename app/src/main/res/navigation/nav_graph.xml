@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_subFragment"
+            app:destination="@id/subFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.SubFragment"
+        android:label="SubFragment" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
+</navigation>
