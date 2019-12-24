@@ -10,20 +10,5 @@
         android:name="com.ishikota.photoviewerandroid.ui.MainFragment"
         android:label="MainFragment"
         tools:layout="@layout/main_fragment" >
-        <action
-            android:id="@+id/action_mainFragment_to_subFragment"
-            app:destination="@id/subFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-    <fragment
-        android:id="@+id/subFragment"
-        android:name="com.ishikota.photoviewerandroid.ui.SubFragment"
-        android:label="SubFragment" >
-        <argument
-            android:name="id"
-            app:argType="integer" />
     </fragment>
 </navigation>
