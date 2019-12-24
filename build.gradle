@@ -32,6 +32,7 @@ buildscript {
         moshiversion = '1.9.2'
         retrofitVersion = '2.6.2'
         threetenabpVersion = '1.2.0'
+        glideVersion = '4.9.0'
     }
 
     repositories {
