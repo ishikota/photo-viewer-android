@@ -9,6 +9,6 @@
         android:id="@+id/photoListFragment"
         android:name="com.ishikota.photoviewerandroid.ui.photolist.PhotoListFragment"
         android:label="PhotoListFragment"
-        tools:layout="@layout/main_fragment" >
+        tools:layout="@layout/photolist_fragment" >
     </fragment>
 </navigation>
