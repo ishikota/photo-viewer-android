@@ -19,7 +19,6 @@ class PhotoListViewModel(
     val initialLoadNetworkState = Transformations.switchMap(listing) { it.initialLoadNetworkState }
     val loadMoreNetworkState = Transformations.switchMap(listing) { it.loadMoreNetworkState }
 
-    // TODO implement swipe refresh
     fun refresh() {
         listing.value?.refresh?.invoke()
     }

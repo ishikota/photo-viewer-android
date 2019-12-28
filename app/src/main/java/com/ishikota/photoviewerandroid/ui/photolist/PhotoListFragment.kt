@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
-import timber.log.Timber
+import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
+import com.ishikota.photoviewerandroid.infra.paging.Status
 
 class PhotoListFragment : Fragment() {
 
@@ -41,6 +40,8 @@ class PhotoListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         val adapter = PhotoListAdapter(
             retryCallback = { viewModel.retry() },
@@ -61,6 +62,10 @@ class PhotoListFragment : Fragment() {
             adapter.setNetworkState(it)
             // TODO Workaround because RecyclerView is scrolled to last item of first page after initial load
             binding.recyclerView.scrollToPosition(0)
+            // Hide adapter's progress while swipe refreshing
+            if (binding.swipeRefresh.isRefreshing && it.status == Status.RUNNING) {
+                adapter.setNetworkState(PagingNetworkState.LOADED)
+            }
         })
         viewModel.loadMoreNetworkState.observe(this, NonNullObserver {
             adapter.setNetworkState(it)
