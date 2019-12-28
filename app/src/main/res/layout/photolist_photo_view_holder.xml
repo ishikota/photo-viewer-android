@@ -2,14 +2,23 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="photo"
+            type="com.ishikota.photoviewerandroid.data.api.entities.Photo" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="wrap_content"
+            android:id="@+id/photo_image"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/photo"
+            app:imageFromUrl="@{photo.urls.regular}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
