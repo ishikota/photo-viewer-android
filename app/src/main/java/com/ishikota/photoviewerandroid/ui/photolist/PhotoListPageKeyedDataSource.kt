@@ -2,7 +2,6 @@ package com.ishikota.photoviewerandroid.ui.photolist
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.infra.paging.NetworkStatePageKeyedDataSource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -11,18 +10,18 @@ import io.reactivex.schedulers.Schedulers
 
 class PhotoListPageKeyedDataSource(
     private val listOrder: PhotoRepository.Order,
-    private val photoRepository: PhotoRepository
-) : NetworkStatePageKeyedDataSource<Int, Photo>() {
+    private val useCase: LoadPhotoListUseCase
+) : NetworkStatePageKeyedDataSource<Int, PhotoListAdapter.Item>() {
 
     private val compositeDisposable = CompositeDisposable()
 
     override fun loadItems(
         key: Int,
         perPage: Int,
-        successCallback: (List<Photo>) -> Unit,
+        successCallback: (List<PhotoListAdapter.Item>) -> Unit,
         failureCallback: (Throwable) -> Unit
     ) {
-        photoRepository.getPhotos(key, listOrder)
+        useCase.execute(key, listOrder)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -42,13 +41,13 @@ class PhotoListPageKeyedDataSource(
 
     class Factory(
         private val listOrder: PhotoRepository.Order,
-        private val photoRepository: PhotoRepository
-    ) : DataSource.Factory<Int, Photo>() {
+        private val useCase: LoadPhotoListUseCase
+    ) : DataSource.Factory<Int, PhotoListAdapter.Item>() {
 
         val sourceLiveData = MutableLiveData<PhotoListPageKeyedDataSource>()
 
-        override fun create(): DataSource<Int, Photo> {
-            val source = PhotoListPageKeyedDataSource(listOrder, photoRepository)
+        override fun create(): DataSource<Int, PhotoListAdapter.Item> {
+            val source = PhotoListPageKeyedDataSource(listOrder, useCase)
             sourceLiveData.postValue(source)
             return source
         }

@@ -22,7 +22,7 @@ class PhotoListFragment : Fragment() {
         ViewModelProviders.of(
             this, PhotoListViewModel.Factory(
                 PhotoListPagingRepository(
-                    PhotoRepository.Factory.create()
+                    LoadPhotoListUseCaseImpl(PhotoRepository.Factory.create())
                 )
             )
         ).get(PhotoListViewModel::class.java)
@@ -51,7 +51,22 @@ class PhotoListFragment : Fragment() {
                     "photo clicked",
                     Toast.LENGTH_SHORT
                 ).show()
-            })
+            },
+            onOrderChangeRequested = {
+                Toast.makeText(
+                    requireContext(),
+                    "onOrderChangeRequested",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
+            onGridChangeRequested = {
+                Toast.makeText(
+                    requireContext(),
+                    "onGridChangeRequested",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 

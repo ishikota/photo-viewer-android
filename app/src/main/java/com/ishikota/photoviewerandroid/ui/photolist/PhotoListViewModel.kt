@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.infra.paging.PagingListing
 
@@ -13,7 +12,7 @@ class PhotoListViewModel(
 ) : ViewModel() {
 
     private val listing =
-        MutableLiveData<PagingListing<Photo>>(pagingRepository.getPhotos(PhotoRepository.Order.POPULAR))
+        MutableLiveData<PagingListing<PhotoListAdapter.Item>>(pagingRepository.getPhotos(PhotoRepository.Order.POPULAR))
 
     val pagedList = Transformations.switchMap(listing) { it.pagedList }
     val initialLoadNetworkState = Transformations.switchMap(listing) { it.initialLoadNetworkState }

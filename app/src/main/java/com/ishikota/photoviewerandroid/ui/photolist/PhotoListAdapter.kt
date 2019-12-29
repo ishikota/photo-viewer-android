@@ -1,5 +1,6 @@
 package com.ishikota.photoviewerandroid.ui.photolist
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.DisplayMetrics
 import android.view.Display
@@ -13,6 +14,8 @@ import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import android.view.LayoutInflater
 import androidx.core.hardware.display.DisplayManagerCompat
 import com.ishikota.photoviewerandroid.R
+import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
+import com.ishikota.photoviewerandroid.databinding.PhotolistFilterViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotolistPhotoViewHolderBinding
 import com.ishikota.photoviewerandroid.infra.fitViewSizeToPhoto
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
@@ -20,8 +23,20 @@ import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 
 class PhotoListAdapter(
     private val retryCallback: () -> Unit,
-    private val onPhotoClicked: (Photo) -> Unit
-) : PagedListAdapter<Photo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+    private val onPhotoClicked: (Photo) -> Unit,
+    private val onOrderChangeRequested: () -> Unit,
+    private val onGridChangeRequested: () -> Unit
+) : PagedListAdapter<PhotoListAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+
+    sealed class Item {
+        data class Header(
+            val currentOrder: PhotoRepository.Order
+        ) : Item()
+
+        data class PhotoItem(
+            val entity: Photo
+        ) : Item()
+    }
 
     private var networkState: PagingNetworkState? = null
 
@@ -29,7 +44,13 @@ class PhotoListAdapter(
         return if (hasExtraRow() && position == itemCount - 1) {
             R.layout.paging_network_state_view_holder
         } else {
-            R.layout.photolist_photo_view_holder
+            when (getItem(position)) {
+                is Item.Header -> R.layout.photolist_filter_view_holder
+                is Item.PhotoItem -> R.layout.photolist_photo_view_holder
+                else -> throw IllegalArgumentException(
+                    "unexpected item. item=${getItem(position)}"
+                )
+            }
         }
     }
 
@@ -42,6 +63,14 @@ class PhotoListAdapter(
                     ),
                     retryCallback
                 )
+            R.layout.photolist_filter_view_holder ->
+                HeaderViewHolder(
+                    PhotolistFilterViewHolderBinding.inflate(
+                        LayoutInflater.from(parent.context), parent, false
+                    ),
+                    onOrderChangeRequested,
+                    onGridChangeRequested
+                )
             R.layout.photolist_photo_view_holder ->
                 PhotoViewHolder(
                     PhotolistPhotoViewHolderBinding.inflate(
@@ -53,9 +82,14 @@ class PhotoListAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is PagingNetworkStateViewHolder -> holder.bindTo(networkState)
-            is PhotoViewHolder -> getItem(position)?.let { holder.bind(it) }
+        if (holder is PagingNetworkStateViewHolder) {
+            holder.bindTo(networkState)
+        } else {
+            val item = getItem(position)
+            when {
+                holder is HeaderViewHolder && item is Item.Header -> holder.bind(item)
+                holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item.entity)
+            }
         }
     }
 
@@ -81,6 +115,24 @@ class PhotoListAdapter(
 
     private fun hasExtraRow() = networkState != PagingNetworkState.LOADED
 
+    class HeaderViewHolder(
+        private val binding: PhotolistFilterViewHolderBinding,
+        private val onOrderChangeRequested: () -> Unit,
+        private val onGridChangeRequested: () -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(header: Item.Header) {
+            binding.containerOrder.setOnClickListener {
+                onOrderChangeRequested()
+            }
+            binding.gridFilterIcon.setOnClickListener {
+                onGridChangeRequested()
+            }
+            binding.header = header
+            binding.executePendingBindings()
+        }
+    }
+
     class PhotoViewHolder(
         private val binding: PhotolistPhotoViewHolderBinding,
         private val onPhotoClicked: (Photo) -> Unit
@@ -103,11 +155,17 @@ class PhotoListAdapter(
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Photo>() {
-            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
-                oldItem.id == newItem.id
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
+            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean = when {
+                oldItem is Item.Header && newItem is Item.Header ->
+                    oldItem.currentOrder == newItem.currentOrder
+                oldItem is Item.PhotoItem && newItem is Item.PhotoItem ->
+                    oldItem.entity == newItem.entity
+                else -> false
+            }
 
-            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+            @SuppressLint("DiffUtilEquals")
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean =
                 oldItem == newItem
         }
     }
