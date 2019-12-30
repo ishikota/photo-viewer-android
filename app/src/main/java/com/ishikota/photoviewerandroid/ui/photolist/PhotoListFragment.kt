@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
@@ -52,13 +54,7 @@ class PhotoListFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             },
-            onOrderChangeRequested = {
-                Toast.makeText(
-                    requireContext(),
-                    "onOrderChangeRequested",
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
+            onOrderChangeRequested = this::showListOrderPopupMenu,
             onGridChangeRequested = {
                 Toast.makeText(
                     requireContext(),
@@ -86,5 +82,21 @@ class PhotoListFragment : Fragment() {
             adapter.setNetworkState(it)
         })
 
+    }
+
+    private fun showListOrderPopupMenu(v: View) {
+        PopupMenu(v.context, v).apply {
+            menuInflater.inflate(R.menu.photolist_order, menu)
+            setOnMenuItemClickListener { item ->
+                val order = when (item.itemId) {
+                    R.id.popular -> PhotoRepository.Order.POPULAR
+                    R.id.latest -> PhotoRepository.Order.LATEST
+                    R.id.oldest -> PhotoRepository.Order.OLDEST
+                    else -> throw IllegalArgumentException("unexpected id=${item.itemId}")
+                }
+                viewModel.updateListOrder(order)
+                true
+            }
+        }.show()
     }
 }

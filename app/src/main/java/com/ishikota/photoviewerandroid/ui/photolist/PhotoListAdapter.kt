@@ -4,27 +4,28 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.DisplayMetrics
 import android.view.Display
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.ishikota.photoviewerandroid.data.api.entities.Photo
-import com.ishikota.photoviewerandroid.databinding.PagingNetworkStateViewHolderBinding
-import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
-import android.view.LayoutInflater
-import androidx.core.hardware.display.DisplayManagerCompat
 import com.ishikota.photoviewerandroid.R
+import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
+import com.ishikota.photoviewerandroid.databinding.PagingNetworkStateViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotolistFilterViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotolistPhotoViewHolderBinding
 import com.ishikota.photoviewerandroid.infra.fitViewSizeToPhoto
+import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 
 
 class PhotoListAdapter(
     private val retryCallback: () -> Unit,
     private val onPhotoClicked: (Photo) -> Unit,
-    private val onOrderChangeRequested: () -> Unit,
+    private val onOrderChangeRequested: (View) -> Unit,
     private val onGridChangeRequested: () -> Unit
 ) : PagedListAdapter<PhotoListAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
@@ -117,13 +118,13 @@ class PhotoListAdapter(
 
     class HeaderViewHolder(
         private val binding: PhotolistFilterViewHolderBinding,
-        private val onOrderChangeRequested: () -> Unit,
+        private val onOrderChangeRequested: (View) -> Unit,
         private val onGridChangeRequested: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(header: Item.Header) {
             binding.containerOrder.setOnClickListener {
-                onOrderChangeRequested()
+                onOrderChangeRequested(it)
             }
             binding.gridFilterIcon.setOnClickListener {
                 onGridChangeRequested()
