@@ -14,10 +14,15 @@ import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
+import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
 
-class PhotoListFragment : Fragment() {
+class PhotoListFragment : Fragment(), TabElement {
+
+    override val title: Int? = R.string.top_tab_photo
+
+    override val iconResId: Int? = null
 
     private lateinit var binding: PhotolistFragmentBinding
 
