@@ -7,6 +7,7 @@ import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -26,8 +27,11 @@ class PhotoListAdapter(
     private val retryCallback: () -> Unit,
     private val onPhotoClicked: (Photo) -> Unit,
     private val onOrderChangeRequested: (View) -> Unit,
-    private val onGridChangeRequested: () -> Unit
+    private val onGridChangeRequested: (View) -> Unit
 ) : PagedListAdapter<PhotoListAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+
+    // Use LinearLayoutManager in default
+    var isGridMode = false
 
     sealed class Item {
         data class Header(
@@ -89,7 +93,7 @@ class PhotoListAdapter(
             val item = getItem(position)
             when {
                 holder is HeaderViewHolder && item is Item.Header -> holder.bind(item)
-                holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item.entity)
+                holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item.entity, isGridMode)
             }
         }
     }
@@ -119,7 +123,7 @@ class PhotoListAdapter(
     class HeaderViewHolder(
         private val binding: PhotolistFilterViewHolderBinding,
         private val onOrderChangeRequested: (View) -> Unit,
-        private val onGridChangeRequested: () -> Unit
+        private val onGridChangeRequested: (View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(header: Item.Header) {
@@ -127,7 +131,7 @@ class PhotoListAdapter(
                 onOrderChangeRequested(it)
             }
             binding.gridFilterIcon.setOnClickListener {
-                onGridChangeRequested()
+                onGridChangeRequested(it)
             }
             binding.header = header
             binding.executePendingBindings()
@@ -139,8 +143,16 @@ class PhotoListAdapter(
         private val onPhotoClicked: (Photo) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(photo: Photo) {
-            binding.photoImage.fitViewSizeToPhoto(getScreenWidth(binding.root.context), photo)
+        fun bind(photo: Photo, isGridMode: Boolean) {
+            if (isGridMode) {
+                val viewWidth = getScreenWidth(binding.root.context) / 2
+                binding.photoImage.layoutParams.height = viewWidth
+                binding.photoImage.scaleType = ImageView.ScaleType.CENTER_CROP
+            } else {
+                val viewWidth = getScreenWidth(binding.root.context)
+                binding.photoImage.fitViewSizeToPhoto(viewWidth, photo)
+                binding.photoImage.scaleType = ImageView.ScaleType.CENTER
+            }
             binding.root.setOnClickListener { onPhotoClicked(photo) }
 
             binding.photo = photo
