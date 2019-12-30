@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/photoListFragment">
+    app:startDestination="@id/topFragment">
 
     <fragment
-        android:id="@+id/photoListFragment"
-        android:name="com.ishikota.photoviewerandroid.ui.photolist.PhotoListFragment"
-        android:label="PhotoListFragment"
-        tools:layout="@layout/photolist_fragment" >
+        android:id="@+id/topFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.top.TopFragment"
+        android:label="TopFragment"
+        tools:layout="@layout/top_fragment" >
     </fragment>
 </navigation>
