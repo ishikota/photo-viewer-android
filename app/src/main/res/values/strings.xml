@@ -2,4 +2,9 @@
     <string name="app_name">photo-viewer-android</string>
     <string name="photo">photo</string>
     <string name="retry">retry</string>
+    <string name="popular">Popular</string>
+    <string name="latest">Latest</string>
+    <string name="oldest">Oldest</string>
+    <string name="linear">Linear</string>
+    <string name="grid">Grid</string>
 </resources>

@@ -4,20 +4,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
-import com.ishikota.photoviewerandroid.infra.paging.PagingListing
 
 class PhotoListViewModel(
     pagingRepository: PhotoListPagingRepository
 ) : ViewModel() {
-
-    private val listing =
-        MutableLiveData<PagingListing<Photo>>(pagingRepository.getPhotos(PhotoRepository.Order.POPULAR))
+    private val listOrder = MutableLiveData<PhotoRepository.Order>(DEFAULT_ORDER)
+    private val listing = Transformations.map(listOrder) { pagingRepository.getPhotos(it) }
 
     val pagedList = Transformations.switchMap(listing) { it.pagedList }
     val initialLoadNetworkState = Transformations.switchMap(listing) { it.initialLoadNetworkState }
     val loadMoreNetworkState = Transformations.switchMap(listing) { it.loadMoreNetworkState }
+
+    fun updateListOrder(order: PhotoRepository.Order) {
+        listOrder.postValue(order)
+    }
 
     fun refresh() {
         listing.value?.refresh?.invoke()
@@ -41,5 +42,9 @@ class PhotoListViewModel(
             } else {
                 throw IllegalArgumentException("Unexpected modelClass=$modelClass.")
             }
+    }
+
+    companion object {
+        private val DEFAULT_ORDER = PhotoRepository.Order.POPULAR
     }
 }
