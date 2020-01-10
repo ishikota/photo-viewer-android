@@ -58,6 +58,13 @@ class CollectionListFragment : Fragment(), TabElement {
                     "collection clicked",
                     Toast.LENGTH_SHORT
                 ).show()
+            },
+            onUserClicked = { _ ->
+                Toast.makeText(
+                    requireContext(),
+                    "user clicked",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         )
         binding.recyclerView.adapter = adapter

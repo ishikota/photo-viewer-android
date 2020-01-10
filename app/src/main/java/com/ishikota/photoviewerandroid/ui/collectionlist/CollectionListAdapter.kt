@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
+import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectionlistCollectionViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PagingNetworkStateViewHolderBinding
 import com.ishikota.photoviewerandroid.infra.fitViewSizeToPhoto
@@ -19,7 +20,8 @@ import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 
 class CollectionListAdapter(
     private val retryCallback: () -> Unit,
-    private val onCollectionClicked: (Collection) -> Unit
+    private val onCollectionClicked: (Collection) -> Unit,
+    private val onUserClicked: (User) -> Unit
 ) : PagedListAdapter<Collection, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private var networkState: PagingNetworkState? = null
@@ -46,7 +48,8 @@ class CollectionListAdapter(
                     CollectionlistCollectionViewHolderBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     ),
-                    onCollectionClicked
+                    onCollectionClicked,
+                    onUserClicked
                 )
             else -> throw IllegalArgumentException("unexpected viewType. viewType = $viewType")
         }
@@ -86,7 +89,8 @@ class CollectionListAdapter(
 
     private class CollectionViewHolder(
         private val binding: CollectionlistCollectionViewHolderBinding,
-        private val onCollectionClicked: (Collection) -> Unit
+        private val onCollectionClicked: (Collection) -> Unit,
+        private val onUserClicked: (User) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(collection: Collection) {
@@ -94,8 +98,11 @@ class CollectionListAdapter(
             binding.coverImage.fitViewSizeToPhoto(viewWidth, collection.coverPhoto)
             binding.root.requestLayout()
 
-            binding.coverImage.setOnClickListener {
+            binding.root.setOnClickListener {
                 onCollectionClicked(collection)
+            }
+            binding.userThumbnail.setOnClickListener {
+                onUserClicked(collection.user)
             }
             binding.collection = collection
             binding.executePendingBindings()
