@@ -21,6 +21,8 @@ buildscript {
         lifecycleVersion = '2.1.0'
         recyclerviewVersion = '1.1.0'
         pagingVersion = '2.1.1'
+        coordinatorlayoutVersion = '1.1.0'
+
         okhttpVersion = '4.2.2'
         mockitoVersion = '2.24.0'
         mockitoKotlinVersion = '1.5.0'

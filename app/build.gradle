@@ -63,6 +63,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
     implementation "androidx.paging:paging-runtime:$pagingVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorlayoutVersion"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
