@@ -1,5 +1,6 @@
 package com.ishikota.photoviewerandroid.data.api
 
+import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -14,4 +15,9 @@ interface PhotoViewerService {
         @Query("order_by") orderBy: String
     ): Single<List<Photo>>
 
+    @GET("/collections")
+    fun getCollections(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<List<Collection>>
 }
