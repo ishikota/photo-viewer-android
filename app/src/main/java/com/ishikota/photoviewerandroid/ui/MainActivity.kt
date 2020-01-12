@@ -1,8 +1,6 @@
 package com.ishikota.photoviewerandroid.ui
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -20,21 +18,14 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setupWithNavController(findNavController(R.id.nav_host_fragment))
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.search) {
-            Toast.makeText(this, "TODO search", Toast.LENGTH_SHORT).show()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+        binding.menuAccount.setOnClickListener {
+            Toast.makeText(this, "TODO account", Toast.LENGTH_SHORT).show()
         }
-
+        binding.menuSearch.setOnClickListener {
+            Toast.makeText(this, "TODO search", Toast.LENGTH_SHORT).show()
+        }
     }
 }

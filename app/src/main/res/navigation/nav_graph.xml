@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/topFragment"
         android:name="com.ishikota.photoviewerandroid.ui.top.TopFragment"
-        android:label="TopFragment"
         tools:layout="@layout/top_fragment" >
     </fragment>
 </navigation>
