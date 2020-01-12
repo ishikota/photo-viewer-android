@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">photo-viewer-android</string>
     <string name="photo">photo</string>
+    <string name="icon">icon</string>
     <string name="retry">retry</string>
     <string name="popular">Popular</string>
     <string name="latest">Latest</string>
