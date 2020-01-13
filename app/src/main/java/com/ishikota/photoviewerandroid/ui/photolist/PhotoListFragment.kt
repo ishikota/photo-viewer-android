@@ -1,5 +1,6 @@
 package com.ishikota.photoviewerandroid.ui.photolist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ishikota.photoviewerandroid.PhotoViewerApplication
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
+import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
+import javax.inject.Inject
 
 class PhotoListFragment : Fragment(), TabElement {
 
@@ -28,16 +32,20 @@ class PhotoListFragment : Fragment(), TabElement {
 
     private lateinit var adapter: PhotoListAdapter
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: PhotoListViewModel by lazy {
         ViewModelProviders.of(
-            this, PhotoListViewModel.Factory(
-                PhotoListPagingRepository(
-                    LoadPhotoListUseCaseImpl(PhotoRepository.Factory.create())
-                )
-            )
+            this, viewModelFactory
         ).get(PhotoListViewModel::class.java)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as PhotoViewerApplication)
+            .appComponent.photoListComponent().create().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

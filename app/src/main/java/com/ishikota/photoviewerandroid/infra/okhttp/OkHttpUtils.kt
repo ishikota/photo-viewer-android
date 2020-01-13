@@ -5,6 +5,7 @@ import com.ishikota.photoviewerandroid.infra.flipper.FlipperWrapper
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
+// TODO
 fun buildDefaultOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
     if (BuildConfig.DEBUG) {
         addInterceptor(

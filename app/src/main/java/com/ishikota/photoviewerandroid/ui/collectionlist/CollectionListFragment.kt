@@ -1,5 +1,6 @@
 package com.ishikota.photoviewerandroid.ui.collectionlist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +9,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ishikota.photoviewerandroid.PhotoViewerApplication
 import com.ishikota.photoviewerandroid.R
-import com.ishikota.photoviewerandroid.data.repository.CollectionRepository
 import com.ishikota.photoviewerandroid.databinding.CollectionlistFragmentBinding
+import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
+import javax.inject.Inject
 
 class CollectionListFragment : Fragment(), TabElement {
 
@@ -26,14 +29,19 @@ class CollectionListFragment : Fragment(), TabElement {
 
     private lateinit var adapter: CollectionListAdapter
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: CollectionListViewModel by lazy {
         ViewModelProviders.of(
-            this, CollectionListViewModel.Factory(
-                CollectionListPagingRepository(
-                    CollectionRepository.Factory.create()
-                )
-            )
+            this, viewModelFactory
         ).get(CollectionListViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as PhotoViewerApplication)
+            .appComponent.collectionListComponent().create().inject(this)
     }
 
     override fun onCreateView(
