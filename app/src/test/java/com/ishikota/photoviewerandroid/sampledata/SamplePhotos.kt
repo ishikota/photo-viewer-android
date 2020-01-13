@@ -1,9 +1,12 @@
 package com.ishikota.photoviewerandroid.sampledata
 
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
-import com.ishikota.photoviewerandroid.infra.moshi.buildDefaultMoshi
+import com.ishikota.photoviewerandroid.di.NetworkModule
 
-inline fun<reified T> jsonToModel(json: String): T? = buildDefaultMoshi().adapter(T::class.java).fromJson(json)
+inline fun<reified T> jsonToModel(json: String): T? = NetworkModule(
+    endpoint = "https://dummy.com/",
+    appAccessKey = "dummy_key"
+).provideMoshi().adapter(T::class.java).fromJson(json)
 
 fun buildSamplePhoto(): Photo = jsonToModel<Photo>(photoJson)!!
 private val photoJson =

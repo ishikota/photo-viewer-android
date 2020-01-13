@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ishikota.photoviewerandroid.PhotoViewerApplication
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
+import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
@@ -43,8 +43,7 @@ class PhotoListFragment : Fragment(), TabElement {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as PhotoViewerApplication)
-            .appComponent.photoListComponent().create().inject(this)
+        appComponent().photoListComponent().create().inject(this)
     }
 
     override fun onCreateView(
