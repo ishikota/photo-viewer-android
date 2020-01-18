@@ -3,11 +3,11 @@ package com.ishikota.photoviewerandroid.ui.photolist
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
+import javax.inject.Inject
 
-class PhotoListViewModel(
-    pagingRepository: PhotoListPagingRepository
+class PhotoListViewModel @Inject constructor(
+    private val pagingRepository: PhotoListPagingRepository
 ) : ViewModel() {
     private val listOrder = MutableLiveData<PhotoRepository.Order>(DEFAULT_ORDER)
     private val listing = Transformations.map(listOrder) { pagingRepository.getPhotos(it) }
@@ -30,18 +30,6 @@ class PhotoListViewModel(
 
     override fun onCleared() {
         listing.value?.clear?.invoke()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(
-        private val pagingRepository: PhotoListPagingRepository
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            if (modelClass.isAssignableFrom(PhotoListViewModel::class.java)) {
-                PhotoListViewModel(pagingRepository) as T
-            } else {
-                throw IllegalArgumentException("Unexpected modelClass=$modelClass.")
-            }
     }
 
     companion object {
