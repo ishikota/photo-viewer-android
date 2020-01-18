@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ishikota.photoviewerandroid.R
+import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
@@ -20,6 +20,7 @@ import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
+import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailActivity
 import javax.inject.Inject
 
 class PhotoListFragment : Fragment(), TabElement {
@@ -62,13 +63,7 @@ class PhotoListFragment : Fragment(), TabElement {
 
         adapter = PhotoListAdapter(
             retryCallback = { viewModel.retry() },
-            onPhotoClicked = { _ ->
-                Toast.makeText(
-                    requireContext(),
-                    "photo clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
+            onPhotoClicked = this::navigateToPhotoDetail,
             onOrderChangeRequested = this::showListOrderPopupMenu,
             onGridChangeRequested = this::showSwitchGridModePopupMenu
         )
@@ -91,6 +86,10 @@ class PhotoListFragment : Fragment(), TabElement {
             adapter.setNetworkState(it)
         })
 
+    }
+
+    private fun navigateToPhotoDetail(photo: Photo) {
+        startActivity(PhotoDetailActivity.createIntent(requireContext(), photo.id))
     }
 
     private fun setLayoutManager(isGridMode: Boolean) {

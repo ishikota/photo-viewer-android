@@ -2,6 +2,7 @@ package com.ishikota.photoviewerandroid.di
 
 import com.ishikota.photoviewerandroid.ui.MainActivity
 import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListComponent
+import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
 import com.ishikota.photoviewerandroid.ui.photolist.PhotoListComponent
 import dagger.Component
 import javax.inject.Singleton
@@ -24,4 +25,5 @@ interface AppComponent {
     fun inject(activity: MainActivity)
     fun photoListComponent(): PhotoListComponent.Factory
     fun collectionListComponent(): CollectionListComponent.Factory
+    fun photoDetailComponent(): PhotoDetailComponent.Factory
 }
