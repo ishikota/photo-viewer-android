@@ -12,4 +12,6 @@ interface PhotoRepository {
     }
 
     fun getPhotos(page: Int, order: Order): Single<List<Photo>>
+
+    fun getPhoto(id: String): Single<Photo>
 }

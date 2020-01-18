@@ -9,6 +9,8 @@ class PhotoRepositoryImpl(private val photoViewerService: PhotoViewerService) : 
     override fun getPhotos(page: Int, order: PhotoRepository.Order): Single<List<Photo>> =
         photoViewerService.getPhotos(page = page, perPage = PER_PAGE, orderBy = order.value)
 
+    override fun getPhoto(id: String): Single<Photo> = photoViewerService.getPhoto(id)
+
     companion object {
         const val PER_PAGE = 30
     }
