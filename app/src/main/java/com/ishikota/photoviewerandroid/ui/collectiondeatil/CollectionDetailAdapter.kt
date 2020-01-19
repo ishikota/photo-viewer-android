@@ -8,29 +8,50 @@ import android.view.Display
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.hardware.display.DisplayManagerCompat
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectiondetailCollectionViewHolderBinding
+import com.ishikota.photoviewerandroid.databinding.PagingNetworkStateViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotolistPhotoViewHolderBinding
 import com.ishikota.photoviewerandroid.infra.fitViewSizeToPhoto
+import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
+import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 
 class CollectionDetailAdapter(
     private val onUserClicked: (User) -> Unit,
-    private val onPhotoClicked: (Photo) -> Unit
-) : ListAdapter<CollectionDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+    private val onPhotoClicked: (Photo) -> Unit,
+    private val retryCallback: () -> Unit
+) : PagedListAdapter<CollectionDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
-    override fun getItemViewType(position: Int): Int = when (getItem(position)) {
-        is Item.CollectionItem -> R.layout.collectiondetail_collection_view_holder
-        is Item.PhotoItem -> R.layout.photolist_photo_view_holder
-    }
+    private var networkState: PagingNetworkState? = null
+
+    override fun getItemViewType(position: Int): Int =
+        if (hasExtraRow() && position == itemCount - 1) {
+            R.layout.paging_network_state_view_holder
+        } else {
+            when (getItem(position)) {
+                is Item.CollectionItem -> R.layout.collectiondetail_collection_view_holder
+                is Item.PhotoItem -> R.layout.photolist_photo_view_holder
+                else -> throw IllegalArgumentException(
+                    "unexpected item. item=${getItem(position)}"
+                )
+            }
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
+            R.layout.paging_network_state_view_holder ->
+                PagingNetworkStateViewHolder(
+                    PagingNetworkStateViewHolderBinding.inflate(
+                        LayoutInflater.from(parent.context), parent, false
+                    ),
+                    retryCallback
+                )
             R.layout.collectiondetail_collection_view_holder -> CollectionViewHolder(
                 CollectiondetailCollectionViewHolderBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
@@ -48,12 +69,38 @@ class CollectionDetailAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = getItem(position)
-        when {
-            holder is CollectionViewHolder && item is Item.CollectionItem -> holder.bind(item)
-            holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item)
+        if (holder is PagingNetworkStateViewHolder) {
+            holder.bindTo(networkState)
+        } else {
+            val item = getItem(position)
+            when {
+                holder is CollectionViewHolder && item is Item.CollectionItem -> holder.bind(item)
+                holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item)
+            }
         }
     }
+
+    override fun getItemCount(): Int {
+        return super.getItemCount() + if (hasExtraRow()) 1 else 0
+    }
+
+    fun setNetworkState(newNetworkState: PagingNetworkState?) {
+        val previousState = this.networkState
+        val hadExtraRow = hasExtraRow()
+        this.networkState = newNetworkState
+        val hasExtraRow = hasExtraRow()
+        if (hadExtraRow != hasExtraRow) {
+            if (hadExtraRow) {
+                notifyItemRemoved(super.getItemCount())
+            } else {
+                notifyItemInserted(super.getItemCount())
+            }
+        } else if (hasExtraRow && previousState != newNetworkState) {
+            notifyItemChanged(itemCount - 1)
+        }
+    }
+
+    private fun hasExtraRow() = networkState != PagingNetworkState.LOADED
 
     sealed class Item {
         data class CollectionItem(val entity: Collection, val hasDescription: Boolean) : Item()

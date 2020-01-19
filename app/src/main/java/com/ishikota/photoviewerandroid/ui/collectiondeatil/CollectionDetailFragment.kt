@@ -23,11 +23,10 @@ class CollectionDetailFragment : Fragment() {
 
     private lateinit var binding: CollectiondetailFragmentBinding
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
     private lateinit var adapter: CollectionDetailAdapter
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     private val viewModel: CollectionDetailViewModel by lazy {
         ViewModelProviders.of(
@@ -53,6 +52,7 @@ class CollectionDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
         adapter = CollectionDetailAdapter(
             onUserClicked = { user ->
                 Toast.makeText(
@@ -61,18 +61,23 @@ class CollectionDetailFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             },
-            onPhotoClicked = this::navigateToPhotoDetail
+            onPhotoClicked = this::navigateToPhotoDetail,
+            retryCallback = { viewModel.retry() }
         )
         binding.recyclerView.adapter = adapter
-        binding.retryButton.setOnClickListener {
-            viewModel.loadData(safeArgs.collectionId)
-        }
 
-        viewModel.recyclerViewData.observe(this, NonNullObserver {
+        viewModel.pagedList.observe(this, NonNullObserver {
             adapter.submitList(it)
         })
-
-        viewModel.loadData(safeArgs.collectionId)
+        viewModel.initialLoadNetworkState.observe(this, NonNullObserver {
+            adapter.setNetworkState(it)
+            // TODO Workaround because RecyclerView is scrolled to last item of first page after initial load
+            binding.recyclerView.scrollToPosition(0)
+        })
+        viewModel.loadMoreNetworkState.observe(this, NonNullObserver {
+            adapter.setNetworkState(it)
+        })
+        viewModel.setCollectionId(safeArgs.collectionId)
     }
 
     private fun navigateToPhotoDetail(photo: Photo) {

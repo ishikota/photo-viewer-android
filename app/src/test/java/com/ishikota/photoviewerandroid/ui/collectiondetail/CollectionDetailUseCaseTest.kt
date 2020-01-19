@@ -33,16 +33,29 @@ class CollectionDetailUseCaseTest {
     }
 
     @Test
-    fun execute() {
+    fun executeForFirstPage() {
         whenever(collectionRepository.getCollection("id"))
             .thenReturn(Single.just(buildSampleCollection()))
-        whenever(collectionRepository.getCollectionPhotos("id"))
+        whenever(collectionRepository.getCollectionPhotos("id", 1))
             .thenReturn(Single.just(buildSamplePhotoList(2)))
 
-        val result = useCase.execute("id").blockingGet()
+        val result = useCase.execute("id", 1).blockingGet()
 
         expect.that(result.size).isEqualTo(3)
         expect.that(result[0]).isInstanceOf(CollectionDetailAdapter.Item.CollectionItem::class.java)
+        expect.that(result[1]).isInstanceOf(CollectionDetailAdapter.Item.PhotoItem::class.java)
+        expect.that(result[2]).isInstanceOf(CollectionDetailAdapter.Item.PhotoItem::class.java)
+    }
+
+    @Test
+    fun executeForSecondPage() {
+        whenever(collectionRepository.getCollectionPhotos("id", 2))
+            .thenReturn(Single.just(buildSamplePhotoList(3)))
+
+        val result = useCase.execute("id", 2).blockingGet()
+
+        expect.that(result.size).isEqualTo(3)
+        expect.that(result[0]).isInstanceOf(CollectionDetailAdapter.Item.PhotoItem::class.java)
         expect.that(result[1]).isInstanceOf(CollectionDetailAdapter.Item.PhotoItem::class.java)
         expect.that(result[2]).isInstanceOf(CollectionDetailAdapter.Item.PhotoItem::class.java)
     }

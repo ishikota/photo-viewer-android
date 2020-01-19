@@ -10,5 +10,5 @@ interface CollectionRepository {
 
     fun getCollection(id: String): Single<Collection>
 
-    fun getCollectionPhotos(id: String): Single<List<Photo>>
+    fun getCollectionPhotos(id: String, page: Int): Single<List<Photo>>
 }

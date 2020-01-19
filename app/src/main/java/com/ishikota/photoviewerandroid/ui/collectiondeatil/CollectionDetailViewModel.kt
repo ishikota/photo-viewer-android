@@ -1,45 +1,30 @@
 package com.ishikota.photoviewerandroid.ui.collectiondeatil
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
 
 class CollectionDetailViewModel @Inject constructor(
-    private val useCase: CollectionDetailUseCase
+    private val pagingRepository: CollectionDetailPagingRepository
 ) : ViewModel() {
 
-    private val compositeDisposable = CompositeDisposable()
+    private val collectionId = MutableLiveData<String>()
+    private val listing = Transformations.map(collectionId) { pagingRepository.getListing(it) }
 
-    private val _recyclerViewData: MutableLiveData<List<CollectionDetailAdapter.Item>> =
-        MutableLiveData()
-    val recyclerViewData: LiveData<List<CollectionDetailAdapter.Item>> = _recyclerViewData
+    val pagedList = Transformations.switchMap(listing) { it.pagedList }
+    val initialLoadNetworkState = Transformations.switchMap(listing) { it.initialLoadNetworkState }
+    val loadMoreNetworkState = Transformations.switchMap(listing) { it.loadMoreNetworkState }
 
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    fun setCollectionId(id: String) {
+        collectionId.postValue(id)
+    }
 
-    private val _isError: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isError: LiveData<Boolean> = _isError
+    fun retry() {
+        listing.value?.retry?.invoke()
+    }
 
-    fun loadData(id: String) {
-        useCase.execute(id)
-            .doOnSubscribe {
-                _isError.postValue(false)
-                _isLoading.postValue(true)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                _recyclerViewData.postValue(it)
-                _isLoading.postValue(false)
-            }, { error ->
-                Timber.e(error)
-                _isLoading.postValue(false)
-                _isError.postValue(true)
-            }).also { compositeDisposable.add(it) }
+    override fun onCleared() {
+        listing.value?.clear?.invoke()
     }
 }

@@ -8,15 +8,23 @@ import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 interface CollectionDetailUseCase {
-    fun execute(collectionId: String): Single<List<CollectionDetailAdapter.Item>>
+    fun execute(collectionId: String, page: Int): Single<List<CollectionDetailAdapter.Item>>
 }
 
 class CollectionDetailUseCaseImpl @Inject constructor(
     private val collectionRepository: CollectionRepository
 ) : CollectionDetailUseCase {
-    override fun execute(collectionId: String): Single<List<CollectionDetailAdapter.Item>> =
-        collectionRepository.getCollection(collectionId).zipWith(
-            collectionRepository.getCollectionPhotos(collectionId), BiFunction(this::merge))
+    override fun execute(collectionId: String, page: Int): Single<List<CollectionDetailAdapter.Item>> {
+        return if (page == 1) {
+            collectionRepository.getCollection(collectionId).zipWith(
+                collectionRepository.getCollectionPhotos(collectionId, page), BiFunction(this::merge)
+            )
+        } else {
+            collectionRepository.getCollectionPhotos(collectionId, page).map { photos ->
+                photos.map { CollectionDetailAdapter.Item.PhotoItem(it) }
+            }
+        }
+    }
 
 
     private fun merge(
