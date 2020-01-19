@@ -12,4 +12,8 @@
     <string name="top_tab_collection">Collection</string>
     <string name="search">Search</string>
     <string name="tags">Tags</string>
+    <plurals name="photos">
+        <item quantity="one">%d photo</item>
+        <item quantity="other">%d photos</item>
+    </plurals>
 </resources>
