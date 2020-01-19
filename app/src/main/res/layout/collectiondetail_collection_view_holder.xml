@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="collection"
+            type="com.ishikota.photoviewerandroid.data.api.entities.Collection" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp">
+
+        <ImageView
+            android:id="@+id/user_thumbnail"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:contentDescription="@string/photo"
+            android:foreground="?android:selectableItemBackground"
+            android:padding="16dp"
+            app:clipToCircle="@{true}"
+            app:imageFromUrl="@{collection.user.profileImage.medium}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{collection.title}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/user_text"
+            app:layout_constraintLeft_toRightOf="@id/user_thumbnail"
+            app:layout_constraintTop_toTopOf="@id/user_thumbnail"
+            tools:text="Above the fold - Med.Pro App" />
+
+        <TextView
+            android:id="@+id/user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{collection.user.userName +  `, `}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/user_thumbnail"
+            app:layout_constraintLeft_toRightOf="@id/user_thumbnail"
+            app:layout_constraintTop_toBottomOf="@id/title_text"
+            tools:text="Outcrowd, " />
+
+        <TextView
+            android:id="@+id/photo_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@plurals/photos(collection.totalPhotos, collection.totalPhotos)}"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/user_text"
+            app:layout_constraintTop_toTopOf="@id/user_text"
+            app:layout_constraintBottom_toBottomOf="@id/user_text"
+            tools:text="64 photos"
+            />
+
+        <ImageView
+            android:id="@+id/cover_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:contentDescription="@string/photo"
+            android:scaleType="centerCrop"
+            android:layout_margin="16dp"
+            app:imageFromUrl="@{collection.coverPhoto.urls.small}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_thumbnail"
+            app:layout_constraintBottom_toTopOf="@id/barrier1"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@{collection.description}"
+            app:layout_constraintLeft_toRightOf="@id/cover_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_thumbnail"
+            app:layout_constraintBottom_toTopOf="@id/barrier1"
+            tools:text="@tools:sample/lorem/random"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="cover_image,description"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
