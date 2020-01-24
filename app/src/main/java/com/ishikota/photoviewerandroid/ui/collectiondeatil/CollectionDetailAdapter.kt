@@ -2,7 +2,6 @@ package com.ishikota.photoviewerandroid.ui.collectiondeatil
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Typeface
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.LayoutInflater
@@ -12,10 +11,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ishikota.photoviewerandroid.R
-import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
-import com.ishikota.photoviewerandroid.data.api.entities.User
-import com.ishikota.photoviewerandroid.databinding.CollectiondetailCollectionViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PagingNetworkStateViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotolistPhotoViewHolderBinding
 import com.ishikota.photoviewerandroid.infra.fitViewSizeToPhoto
@@ -23,10 +19,9 @@ import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 
 class CollectionDetailAdapter(
-    private val onUserClicked: (User) -> Unit,
     private val onPhotoClicked: (Photo) -> Unit,
     private val retryCallback: () -> Unit
-) : PagedListAdapter<CollectionDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+) : PagedListAdapter<Photo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private var networkState: PagingNetworkState? = null
 
@@ -34,13 +29,7 @@ class CollectionDetailAdapter(
         if (hasExtraRow() && position == itemCount - 1) {
             R.layout.paging_network_state_view_holder
         } else {
-            when (getItem(position)) {
-                is Item.CollectionItem -> R.layout.collectiondetail_collection_view_holder
-                is Item.PhotoItem -> R.layout.photolist_photo_view_holder
-                else -> throw IllegalArgumentException(
-                    "unexpected item. item=${getItem(position)}"
-                )
-            }
+            R.layout.photolist_photo_view_holder
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
@@ -52,13 +41,6 @@ class CollectionDetailAdapter(
                     ),
                     retryCallback
                 )
-            R.layout.collectiondetail_collection_view_holder -> CollectionViewHolder(
-                CollectiondetailCollectionViewHolderBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                ),
-                onUserClicked,
-                onPhotoClicked
-            )
             R.layout.photolist_photo_view_holder -> PhotoViewHolder(
                 PhotolistPhotoViewHolderBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
@@ -74,8 +56,7 @@ class CollectionDetailAdapter(
         } else {
             val item = getItem(position)
             when {
-                holder is CollectionViewHolder && item is Item.CollectionItem -> holder.bind(item)
-                holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item)
+                holder is PhotoViewHolder && item != null -> holder.bind(item)
             }
         }
     }
@@ -102,47 +83,19 @@ class CollectionDetailAdapter(
 
     private fun hasExtraRow() = networkState != PagingNetworkState.LOADED
 
-    sealed class Item {
-        data class CollectionItem(val entity: Collection, val hasDescription: Boolean) : Item()
-        data class PhotoItem(val entity: Photo) : Item()
-    }
-
-    private class CollectionViewHolder(
-        private val binding: CollectiondetailCollectionViewHolderBinding,
-        private val onUserClicked: (User) -> Unit,
-        private val onPhotoClicked: (Photo) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: Item.CollectionItem) {
-            binding.userThumbnail.setOnClickListener {
-                onUserClicked(item.entity.user)
-            }
-            binding.coverImage.setOnClickListener {
-                onPhotoClicked(item.entity.coverPhoto)
-            }
-            binding.collection = item.entity
-            binding.executePendingBindings()
-
-            if (!item.hasDescription) {
-                binding.description.setText(R.string.no_description)
-                binding.description.typeface = Typeface.DEFAULT_BOLD
-            }
-        }
-    }
-
     private class PhotoViewHolder(
         private val binding: PhotolistPhotoViewHolderBinding,
         private val onPhotoClicked: (Photo) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Item.PhotoItem) {
+        fun bind(photo: Photo) {
             val viewWidth = getScreenWidth(binding.root.context)
-            binding.photoImage.fitViewSizeToPhoto(viewWidth, item.entity)
+            binding.photoImage.fitViewSizeToPhoto(viewWidth, photo)
             binding.photoImage.setOnClickListener {
-                onPhotoClicked(item.entity)
+                onPhotoClicked(photo)
             }
 
-            binding.photo = item.entity
+            binding.photo = photo
             binding.executePendingBindings()
         }
 
@@ -155,17 +108,12 @@ class CollectionDetailAdapter(
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
-            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean = when {
-                oldItem is Item.PhotoItem && newItem is Item.PhotoItem ->
-                    oldItem.entity.id == newItem.entity.id
-                oldItem is Item.CollectionItem && newItem is Item.CollectionItem ->
-                    oldItem.entity.id == newItem.entity.id
-                else -> false
-            }
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Photo>() {
+            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+                oldItem.id == newItem.id
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean =
+            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean =
                 oldItem == newItem
         }
     }

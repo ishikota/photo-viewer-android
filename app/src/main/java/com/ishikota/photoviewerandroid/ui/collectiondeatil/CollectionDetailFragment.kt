@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.databinding.CollectiondetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
@@ -59,20 +60,45 @@ class CollectionDetailFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setupWithNavController(NavHostFragment.findNavController(this))
-        binding.toolbar.title = safeArgs.collectionTitle
 
-        adapter = CollectionDetailAdapter(
-            onUserClicked = { user ->
+        binding.toolbar.title = ""
+        binding.collapsingtoolbarlayout.isTitleEnabled = false
+        binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
+            if (i == -appBarLayout.totalScrollRange) {   // if completely collapsed
+                binding.toolbar.title = safeArgs.collectionTitle
+            } else {
+                binding.toolbar.title = ""
+            }
+        })
+
+        binding.collectionContents.userThumbnail.setOnClickListener {
+            viewModel.collectionDetail.value?.user?.let {
                 Toast.makeText(
                     requireContext(),
                     "user clicked",
                     Toast.LENGTH_SHORT
                 ).show()
-            },
+            }
+        }
+        binding.collectionContents.coverImage.setOnClickListener {
+            viewModel.collectionDetail.value?.coverPhoto?.let {
+                navigateToPhotoDetail(it)
+            }
+        }
+        binding.collectionContents.retryButton.setOnClickListener {
+            viewModel.loadCollectionDetail(safeArgs.collectionId)
+        }
+
+        adapter = CollectionDetailAdapter(
             onPhotoClicked = this::navigateToPhotoDetail,
             retryCallback = { viewModel.retry() }
         )
         binding.recyclerView.adapter = adapter
+
+        viewModel.collectionDetail.observe(this, NonNullObserver {
+            binding.collection = it
+            binding.collectionContents.collectionContentGroup.visibility = View.VISIBLE
+        })
 
         viewModel.pagedList.observe(this, NonNullObserver {
             adapter.submitList(it)
@@ -85,7 +111,9 @@ class CollectionDetailFragment : Fragment() {
         viewModel.loadMoreNetworkState.observe(this, NonNullObserver {
             adapter.setNetworkState(it)
         })
-        viewModel.setCollectionId(safeArgs.collectionId)
+
+        viewModel.loadCollectionDetail(safeArgs.collectionId)
+        viewModel.loadCollectionPhotos(safeArgs.collectionId)
     }
 
     private fun navigateToPhotoDetail(photo: Photo) {

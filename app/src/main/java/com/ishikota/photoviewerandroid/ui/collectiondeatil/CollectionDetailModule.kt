@@ -11,14 +11,9 @@ import dagger.multibindings.IntoMap
 @Module
 class CollectionDetailModule {
     @Provides
-    fun provideUseCase(
-        collectionRepository: CollectionRepository
-    ): CollectionDetailUseCase = CollectionDetailUseCaseImpl(collectionRepository)
-
-    @Provides
     fun providePagingRepository(
-        userCase: CollectionDetailUseCase
-    ): CollectionDetailPagingRepository = CollectionDetailPagingRepository(userCase)
+        repository: CollectionRepository
+    ): CollectionDetailPagingRepository = CollectionDetailPagingRepository(repository)
 }
 
 @Module
