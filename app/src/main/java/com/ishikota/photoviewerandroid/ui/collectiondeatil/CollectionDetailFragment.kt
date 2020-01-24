@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.databinding.CollectiondetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
-import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailActivity
 import javax.inject.Inject
 
 class CollectionDetailFragment : Fragment() {
@@ -81,7 +81,9 @@ class CollectionDetailFragment : Fragment() {
     }
 
     private fun navigateToPhotoDetail(photo: Photo) {
-        startActivity(PhotoDetailActivity.createIntent(requireContext(), photo.id))
+        val action = CollectionDetailFragmentDirections.
+            actionCollectionDetailFragmentToPhotoDetailFragment(photo.id)
+        findNavController().navigate(action)
     }
 
 }
