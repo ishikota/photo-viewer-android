@@ -93,8 +93,10 @@ class CollectionListFragment : Fragment(), TabElement {
     }
 
     private fun navigateToCollectionDetail(collection: Collection) {
-        val action =
-            TopFragmentDirections.actionTopFragmentToCollectionDetailFragment(collection.id)
+        val action = TopFragmentDirections.actionTopFragmentToCollectionDetailFragment(
+            collection.id,
+            collection.title
+        )
         findNavController().navigate(action)
     }
 }

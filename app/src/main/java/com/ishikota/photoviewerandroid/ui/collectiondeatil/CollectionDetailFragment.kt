@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.databinding.CollectiondetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
@@ -52,6 +55,11 @@ class CollectionDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.toolbar.setupWithNavController(NavHostFragment.findNavController(this))
+        binding.toolbar.title = safeArgs.collectionTitle
 
         adapter = CollectionDetailAdapter(
             onUserClicked = { user ->

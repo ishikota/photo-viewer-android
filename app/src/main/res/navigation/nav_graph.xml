@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/topFragment"
         android:name="com.ishikota.photoviewerandroid.ui.top.TopFragment"
-        tools:layout="@layout/top_fragment" >
+        tools:layout="@layout/top_fragment">
         <action
             android:id="@+id/action_topFragment_to_photoDetailFragment"
             app:destination="@id/photoDetailFragment" />
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/photoDetailFragment"
         android:name="com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailFragment"
-        android:label="PhotoDetailFragment" >
+        android:label="PhotoDetailFragment">
         <argument
             android:name="photo_id"
             app:argType="string" />
@@ -33,6 +33,9 @@
 
         <argument
             android:name="collection_id"
+            app:argType="string" />
+        <argument
+            android:name="collection_title"
             app:argType="string" />
         <action
             android:id="@+id/action_collectionDetailFragment_to_photoDetailFragment"
