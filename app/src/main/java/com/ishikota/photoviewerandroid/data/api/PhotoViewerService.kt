@@ -27,4 +27,16 @@ interface PhotoViewerService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
     ): Single<List<Collection>>
+
+    @GET("/collections/{id}")
+    fun getCollection(
+        @Path("id") id: String
+    ): Single<Collection>
+
+    @GET("/collections/{id}/photos")
+    fun getCollectionPhotos(
+        @Path("id") id: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<List<Photo>>
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ishikota.photoviewerandroid.R
+import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.databinding.CollectionlistFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
@@ -17,6 +18,7 @@ import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
+import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailActivity
 import javax.inject.Inject
 
 class CollectionListFragment : Fragment(), TabElement {
@@ -59,13 +61,7 @@ class CollectionListFragment : Fragment(), TabElement {
 
         adapter = CollectionListAdapter(
             retryCallback = { viewModel.retry() },
-            onCollectionClicked = { _ ->
-                Toast.makeText(
-                    requireContext(),
-                    "collection clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
+            onCollectionClicked = this::navigateToCollectionDetail,
             onUserClicked = { _ ->
                 Toast.makeText(
                     requireContext(),
@@ -93,5 +89,9 @@ class CollectionListFragment : Fragment(), TabElement {
         viewModel.loadMoreNetworkState.observe(this, NonNullObserver {
             adapter.setNetworkState(it)
         })
+    }
+
+    private fun navigateToCollectionDetail(collection: Collection) {
+        startActivity(CollectionDetailActivity.createIntent(requireContext(), collection.id))
     }
 }
