@@ -31,7 +31,7 @@ class TopFragment : Fragment() {
             PhotoListFragment(),
             CollectionListFragment()
         )
-        binding.viewPager.attachTabLayoutAdapter(tabs, requireFragmentManager())
+        binding.viewPager.attachTabLayoutAdapter(tabs, childFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 }

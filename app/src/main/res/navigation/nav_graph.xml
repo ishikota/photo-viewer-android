@@ -9,5 +9,33 @@
         android:id="@+id/topFragment"
         android:name="com.ishikota.photoviewerandroid.ui.top.TopFragment"
         tools:layout="@layout/top_fragment" >
+        <action
+            android:id="@+id/action_topFragment_to_photoDetailFragment"
+            app:destination="@id/photoDetailFragment" />
+        <action
+            android:id="@+id/action_topFragment_to_collectionDetailFragment"
+            app:destination="@id/collectionDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/photoDetailFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailFragment"
+        android:label="PhotoDetailFragment" >
+        <argument
+            android:name="photo_id"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/collectionDetailFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailFragment"
+        android:label="CollectionDetailFragment">
+
+        <argument
+            android:name="collection_id"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_to_photoDetailFragment"
+            app:destination="@id/photoDetailFragment" />
     </fragment>
 </navigation>

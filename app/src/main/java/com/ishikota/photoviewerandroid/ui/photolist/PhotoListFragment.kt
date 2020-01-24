@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ishikota.photoviewerandroid.R
@@ -20,7 +21,7 @@ import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
-import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailActivity
+import com.ishikota.photoviewerandroid.ui.top.TopFragmentDirections
 import javax.inject.Inject
 
 class PhotoListFragment : Fragment(), TabElement {
@@ -89,7 +90,8 @@ class PhotoListFragment : Fragment(), TabElement {
     }
 
     private fun navigateToPhotoDetail(photo: Photo) {
-        startActivity(PhotoDetailActivity.createIntent(requireContext(), photo.id))
+        val action = TopFragmentDirections.actionTopFragmentToPhotoDetailFragment(photo.id)
+        findNavController().navigate(action)
     }
 
     private fun setLayoutManager(isGridMode: Boolean) {
