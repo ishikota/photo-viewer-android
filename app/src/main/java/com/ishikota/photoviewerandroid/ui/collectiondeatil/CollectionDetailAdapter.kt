@@ -21,7 +21,7 @@ import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 class CollectionDetailAdapter(
     private val onPhotoClicked: (Photo) -> Unit,
     private val retryCallback: () -> Unit
-) : PagedListAdapter<Photo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+) : PagedListAdapter<CollectionDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     private var networkState: PagingNetworkState? = null
 
@@ -56,7 +56,7 @@ class CollectionDetailAdapter(
         } else {
             val item = getItem(position)
             when {
-                holder is PhotoViewHolder && item != null -> holder.bind(item)
+                holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item)
             }
         }
     }
@@ -83,19 +83,23 @@ class CollectionDetailAdapter(
 
     private fun hasExtraRow() = networkState != PagingNetworkState.LOADED
 
+    sealed class Item {
+        data class PhotoItem(val entity: Photo) : Item()
+    }
+
     private class PhotoViewHolder(
         private val binding: PhotolistPhotoViewHolderBinding,
         private val onPhotoClicked: (Photo) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(photo: Photo) {
+        fun bind(item: Item.PhotoItem) {
             val viewWidth = getScreenWidth(binding.root.context)
-            binding.photoImage.fitViewSizeToPhoto(viewWidth, photo)
+            binding.photoImage.fitViewSizeToPhoto(viewWidth, item.entity)
             binding.photoImage.setOnClickListener {
-                onPhotoClicked(photo)
+                onPhotoClicked(item.entity)
             }
 
-            binding.photo = photo
+            binding.photo = item.entity
             binding.executePendingBindings()
         }
 
@@ -108,12 +112,15 @@ class CollectionDetailAdapter(
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Photo>() {
-            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
-                oldItem.id == newItem.id
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
+            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean = when {
+                oldItem is Item.PhotoItem && newItem is Item.PhotoItem ->
+                    oldItem.entity.id == newItem.entity.id
+                else -> false
+            }
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean =
                 oldItem == newItem
         }
     }

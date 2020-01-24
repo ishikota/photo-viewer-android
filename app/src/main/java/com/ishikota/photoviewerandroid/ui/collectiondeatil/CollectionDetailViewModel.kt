@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
-import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.CollectionRepository
 import com.ishikota.photoviewerandroid.infra.paging.PagingListing
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,7 +26,7 @@ class CollectionDetailViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val listing = MutableLiveData<PagingListing<Photo>>()
+    private val listing = MutableLiveData<PagingListing<CollectionDetailAdapter.Item>>()
     val pagedList = Transformations.switchMap(listing) { it.pagedList }
     val initialLoadNetworkState = Transformations.switchMap(listing) { it.initialLoadNetworkState }
     val loadMoreNetworkState = Transformations.switchMap(listing) { it.loadMoreNetworkState }
