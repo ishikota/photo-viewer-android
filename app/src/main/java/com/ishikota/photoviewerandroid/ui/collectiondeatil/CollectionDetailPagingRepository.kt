@@ -11,7 +11,7 @@ class CollectionDetailPagingRepository(private val useCase: CollectionDetailUseC
     fun getListing(collectionId: String): PagingListing<CollectionDetailAdapter.Item> {
         val sourceFactory = CollectionDetailPageKeyedDataSource.Factory(collectionId, useCase)
         val config = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(1 + CollectionRepositoryImpl.PER_PAGE)  // 1 collection + PER_PAGE photos
+            .setInitialLoadSizeHint(CollectionRepositoryImpl.PER_PAGE)
             .setPageSize(CollectionRepositoryImpl.PER_PAGE)
             .build()
         val livePagedList = LivePagedListBuilder(sourceFactory, config).build()

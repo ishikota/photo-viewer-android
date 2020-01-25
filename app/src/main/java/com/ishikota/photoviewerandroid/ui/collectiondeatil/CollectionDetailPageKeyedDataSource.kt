@@ -40,13 +40,13 @@ class CollectionDetailPageKeyedDataSource(
 
     class Factory(
         private val collectionId: String,
-        private val userCase: CollectionDetailUseCase
+        private val useCase: CollectionDetailUseCase
     ) : DataSource.Factory<Int, CollectionDetailAdapter.Item>() {
 
         val sourceLiveData = MutableLiveData<CollectionDetailPageKeyedDataSource>()
 
         override fun create(): DataSource<Int, CollectionDetailAdapter.Item> {
-            val source = CollectionDetailPageKeyedDataSource(collectionId, userCase)
+            val source = CollectionDetailPageKeyedDataSource(collectionId, useCase)
             sourceLiveData.postValue(source)
             return source
         }

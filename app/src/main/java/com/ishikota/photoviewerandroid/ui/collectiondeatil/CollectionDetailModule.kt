@@ -17,8 +17,8 @@ class CollectionDetailModule {
 
     @Provides
     fun providePagingRepository(
-        userCase: CollectionDetailUseCase
-    ): CollectionDetailPagingRepository = CollectionDetailPagingRepository(userCase)
+        useCase: CollectionDetailUseCase
+    ): CollectionDetailPagingRepository = CollectionDetailPagingRepository(useCase)
 }
 
 @Module
