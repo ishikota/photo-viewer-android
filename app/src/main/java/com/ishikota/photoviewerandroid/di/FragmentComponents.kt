@@ -5,6 +5,7 @@ import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
 import com.ishikota.photoviewerandroid.ui.photolist.PhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
+import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosComponent
 import dagger.Module
 
 @Module(subcomponents = [
@@ -12,6 +13,7 @@ import dagger.Module
     CollectionListComponent::class,
     PhotoDetailComponent::class,
     CollectionDetailComponent::class,
-    UserDetailComponent::class
+    UserDetailComponent::class,
+    UserDetailPostedPhotosComponent::class
 ])
 class FragmentComponents

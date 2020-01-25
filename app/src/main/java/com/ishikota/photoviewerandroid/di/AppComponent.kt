@@ -6,6 +6,8 @@ import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
 import com.ishikota.photoviewerandroid.ui.photolist.PhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
+import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLikedPhotosComponent
+import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosComponent
 import dagger.Component
 import javax.inject.Singleton
 
@@ -30,4 +32,6 @@ interface AppComponent {
     fun photoDetailComponent(): PhotoDetailComponent.Factory
     fun collectionDetailComponent(): CollectionDetailComponent.Factory
     fun userDetailComponent(): UserDetailComponent.Factory
+    fun userDetailPostedPhotosComponent(): UserDetailPostedPhotosComponent.Factory
+    fun userDetailLikedPhotosComponent(): UserDetailLikedPhotosComponent.Factory
 }

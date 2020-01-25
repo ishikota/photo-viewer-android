@@ -18,8 +18,8 @@ import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.attachTabLayoutAdapter
-import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListFragment
-import com.ishikota.photoviewerandroid.ui.photolist.PhotoListFragment
+import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLikedPhotosFragment
+import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosFragment
 import javax.inject.Inject
 
 class UserDetailFragment: Fragment() {
@@ -76,10 +76,13 @@ class UserDetailFragment: Fragment() {
 
         viewModel.userDetail.observe(this, NonNullObserver {
             binding.user = it
-            val tabs = listOf<TabElement>(
-                PhotoListFragment(),
-                CollectionListFragment()
-            )
+            val tabs = mutableListOf<TabElement>()
+            if (it.totalPhotos != 0) {
+                tabs.add(UserDetailPostedPhotosFragment.createInstance(it.userName))
+            }
+            if (it.totalLikes != 0) {
+                tabs.add(UserDetailLikedPhotosFragment.createInstance(it.userName))
+            }
             binding.viewPager.attachTabLayoutAdapter(tabs, childFragmentManager)
             binding.tabLayout.setupWithViewPager(binding.viewPager)
         })
