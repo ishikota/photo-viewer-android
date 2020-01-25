@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
+import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.PhotodetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
@@ -59,13 +61,7 @@ class PhotoDetailFragment: Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         adapter = PhotoDetailAdapter(
-            onUserClicked = { user ->
-                Toast.makeText(
-                    requireContext(),
-                    "user clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
+            onUserClicked = this::navigateToUserDetail,
             onTagClicked = { tag ->
                 Toast.makeText(
                     requireContext(),
@@ -91,5 +87,11 @@ class PhotoDetailFragment: Fragment() {
         })
 
         viewModel.loadData(safeArgs.photoId)
+    }
+
+    private fun navigateToUserDetail(user: User) {
+        val action = PhotoDetailFragmentDirections.
+            actionPhotoDetailFragmentToUserDetailFragment(user.userName, user.name)
+        findNavController().navigate(action)
     }
 }

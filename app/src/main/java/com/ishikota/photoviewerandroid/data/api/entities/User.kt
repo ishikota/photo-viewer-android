@@ -8,9 +8,14 @@ data class User(
     @Json(name = "id") val id: String,
     @Json(name = "username") val userName: String,
     @Json(name = "name") val name: String,
+    @Json(name = "bio") val bio: String?,
+    @Json(name = "location") val location: String?,
     @Json(name = "total_collections") val totalCollections: Int,
     @Json(name = "total_likes") val totalLikes: Int,
     @Json(name = "total_photos") val totalPhotos: Int,
+    @Json(name = "followers_count") val followersCount: Int?,
+    @Json(name = "following_count") val followingCount: Int?,
+    @Json(name = "downloads") val downloads: Int?,
     @Json(name = "profile_image") val profileImage: ProfileImage
 ) {
 
