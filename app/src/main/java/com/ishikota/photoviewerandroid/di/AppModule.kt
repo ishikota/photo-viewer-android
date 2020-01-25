@@ -1,10 +1,7 @@
 package com.ishikota.photoviewerandroid.di
 
 import com.ishikota.photoviewerandroid.data.api.PhotoViewerService
-import com.ishikota.photoviewerandroid.data.repository.CollectionRepository
-import com.ishikota.photoviewerandroid.data.repository.CollectionRepositoryImpl
-import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
-import com.ishikota.photoviewerandroid.data.repository.PhotoRepositoryImpl
+import com.ishikota.photoviewerandroid.data.repository.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,5 +23,13 @@ class AppModule {
         service: PhotoViewerService
     ): PhotoRepository {
         return PhotoRepositoryImpl(service)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserRepository(
+        service: PhotoViewerService
+    ): UserRepository {
+        return UserRepositoryImpl(service)
     }
 }
