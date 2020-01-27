@@ -12,9 +12,27 @@
     <string name="top_tab_collection">Collection</string>
     <string name="search">Search</string>
     <string name="tags">Tags</string>
+    <string name="posted">Posted</string>
+    <string name="liked">Liked</string>
     <plurals name="photos">
         <item quantity="one">%d photo</item>
         <item quantity="other">%d photos</item>
+    </plurals>
+    <plurals name="likes">
+        <item quantity="one">%d like</item>
+        <item quantity="other">%d likes</item>
+    </plurals>
+    <plurals name="downloads">
+        <item quantity="one">%d download</item>
+        <item quantity="other">%d downloads</item>
+    </plurals>
+    <plurals name="follows">
+        <item quantity="one">%d follow</item>
+        <item quantity="other">%d follows</item>
+    </plurals>
+    <plurals name="followers">
+        <item quantity="one">%d follower</item>
+        <item quantity="other">%d followers</item>
     </plurals>
     <string name="no_description">No Description</string>
 </resources>

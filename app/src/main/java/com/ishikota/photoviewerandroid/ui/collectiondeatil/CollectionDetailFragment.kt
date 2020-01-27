@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
+import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectiondetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
@@ -73,11 +73,7 @@ class CollectionDetailFragment : Fragment() {
 
         binding.collectionContents.userThumbnail.setOnClickListener {
             viewModel.collectionDetail.value?.user?.let {
-                Toast.makeText(
-                    requireContext(),
-                    "user clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
+                navigateToUserDetail(it)
             }
         }
         binding.collectionContents.coverImage.setOnClickListener {
@@ -122,4 +118,9 @@ class CollectionDetailFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    private fun navigateToUserDetail(user: User) {
+        val action = CollectionDetailFragmentDirections.
+            actionCollectionDetailFragmentToUserDetailFragment(user.userName, user.name)
+        findNavController().navigate(action)
+    }
 }

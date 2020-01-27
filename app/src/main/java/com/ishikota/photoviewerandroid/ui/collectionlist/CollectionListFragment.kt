@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
+import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectionlistFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
@@ -63,13 +63,7 @@ class CollectionListFragment : Fragment(), TabElement {
         adapter = CollectionListAdapter(
             retryCallback = { viewModel.retry() },
             onCollectionClicked = this::navigateToCollectionDetail,
-            onUserClicked = { _ ->
-                Toast.makeText(
-                    requireContext(),
-                    "user clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            onUserClicked = this::navigateToUserDetail
         )
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -96,6 +90,14 @@ class CollectionListFragment : Fragment(), TabElement {
         val action = TopFragmentDirections.actionTopFragmentToCollectionDetailFragment(
             collection.id,
             collection.title
+        )
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToUserDetail(user: User) {
+        val action = TopFragmentDirections.actionTopFragmentToUserDetailFragment(
+            user.userName,
+            user.name
         )
         findNavController().navigate(action)
     }
