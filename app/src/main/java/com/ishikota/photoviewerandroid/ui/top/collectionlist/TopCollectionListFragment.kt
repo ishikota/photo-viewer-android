@@ -1,4 +1,4 @@
-package com.ishikota.photoviewerandroid.ui.collectionlist
+package com.ishikota.photoviewerandroid.ui.top.collectionlist
 
 import android.content.Context
 import android.os.Bundle
@@ -13,16 +13,18 @@ import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectionlistFragmentBinding
-import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
+import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListAdapter
+import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListPagingRepository
+import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListViewModel
 import com.ishikota.photoviewerandroid.ui.top.TopFragmentDirections
 import javax.inject.Inject
 
-class CollectionListFragment : Fragment(), TabElement {
+class TopCollectionListFragment : Fragment(), TabElement {
 
     override val title: Int? = R.string.top_tab_collection
 
@@ -33,17 +35,17 @@ class CollectionListFragment : Fragment(), TabElement {
     private lateinit var adapter: CollectionListAdapter
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var pagingRepository: CollectionListPagingRepository<Unit>
 
-    private val viewModel: CollectionListViewModel by lazy {
+    private val viewModel: CollectionListViewModel<Unit> by lazy {
         ViewModelProviders.of(
-            this, viewModelFactory
-        ).get(CollectionListViewModel::class.java)
+            this, CollectionListViewModel.Factory(pagingRepository)
+        ).get(CollectionListViewModel::class.java) as CollectionListViewModel<Unit>
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        appComponent().collectionListComponent().create().inject(this)
+        appComponent().topCollectionListComponent().create().inject(this)
     }
 
     override fun onCreateView(
@@ -84,6 +86,8 @@ class CollectionListFragment : Fragment(), TabElement {
         viewModel.loadMoreNetworkState.observe(this, NonNullObserver {
             adapter.setNetworkState(it)
         })
+
+        viewModel.startLoading(Unit)
     }
 
     private fun navigateToCollectionDetail(collection: Collection) {

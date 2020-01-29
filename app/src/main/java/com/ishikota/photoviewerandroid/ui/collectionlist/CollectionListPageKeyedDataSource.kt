@@ -3,14 +3,14 @@ package com.ishikota.photoviewerandroid.ui.collectionlist
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
-import com.ishikota.photoviewerandroid.data.repository.CollectionRepository
 import com.ishikota.photoviewerandroid.infra.paging.NetworkStatePageKeyedDataSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class CollectionListPageKeyedDataSource(
-    private val collectionRepository: CollectionRepository
+class CollectionListPageKeyedDataSource<P>(
+    private val params: P,
+    private val useCase: CollectionListUseCase<P>
 ) : NetworkStatePageKeyedDataSource<Int, Collection>() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -21,7 +21,7 @@ class CollectionListPageKeyedDataSource(
         successCallback: (List<Collection>) -> Unit,
         failureCallback: (Throwable) -> Unit
     ) {
-        collectionRepository.getCollections(key)
+        useCase.execute(key, params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -39,14 +39,15 @@ class CollectionListPageKeyedDataSource(
         compositeDisposable.clear()
     }
 
-    class Factory(
-        private val repository: CollectionRepository
+    class Factory<P>(
+        private val params: P,
+        private val useCase: CollectionListUseCase<P>
     ) : DataSource.Factory<Int, Collection>() {
 
-        val sourceLiveData = MutableLiveData<CollectionListPageKeyedDataSource>()
+        val sourceLiveData = MutableLiveData<CollectionListPageKeyedDataSource<P>>()
 
         override fun create(): DataSource<Int, Collection> {
-            val source = CollectionListPageKeyedDataSource(repository)
+            val source = CollectionListPageKeyedDataSource(params, useCase)
             sourceLiveData.postValue(source)
             return source
         }
