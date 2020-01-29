@@ -3,14 +3,13 @@ package com.ishikota.photoviewerandroid.ui.photolist
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepositoryImpl
 import com.ishikota.photoviewerandroid.infra.paging.PagingListing
 
-class PhotoListPagingRepository(private val useCase: LoadPhotoListUseCase) {
+class PhotoListPagingRepository<P>(private val useCase: PhotoListUseCase<P>) {
 
-    fun getPhotos(listOrder: PhotoRepository.Order): PagingListing<PhotoListAdapter.Item> {
-        val sourceFactory = PhotoListPageKeyedDataSource.Factory(listOrder, useCase)
+    fun getPhotos(params: P): PagingListing<PhotoListAdapter.Item> {
+        val sourceFactory = PhotoListPageKeyedDataSource.Factory(params, useCase)
         val config = PagedList.Config.Builder()
             .setInitialLoadSizeHint(PhotoRepositoryImpl.PER_PAGE)
             .setPageSize(PhotoRepositoryImpl.PER_PAGE)

@@ -4,7 +4,7 @@ import com.ishikota.photoviewerandroid.ui.MainActivity
 import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailComponent
 import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
-import com.ishikota.photoviewerandroid.ui.photolist.PhotoListComponent
+import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLikedPhotosComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosComponent
@@ -27,7 +27,7 @@ interface AppComponent {
     }
 
     fun inject(activity: MainActivity)
-    fun photoListComponent(): PhotoListComponent.Factory
+    fun topPhotoListComponent(): TopPhotoListComponent.Factory
     fun collectionListComponent(): CollectionListComponent.Factory
     fun photoDetailComponent(): PhotoDetailComponent.Factory
     fun collectionDetailComponent(): CollectionDetailComponent.Factory

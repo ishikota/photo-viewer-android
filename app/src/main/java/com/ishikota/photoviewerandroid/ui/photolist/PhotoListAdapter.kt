@@ -11,6 +11,8 @@ import android.widget.ImageView
 import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
@@ -32,6 +34,25 @@ class PhotoListAdapter(
 
     // Use LinearLayoutManager in default
     var isGridMode = false
+
+    fun updateLayoutManager(recyclerView: RecyclerView, isGridMode: Boolean) {
+        val layoutManager = if (isGridMode) {
+            GridLayoutManager(recyclerView.context, 2).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int =
+                        when (getItemViewType(position)) {
+                            R.layout.photolist_filter_view_holder,
+                            R.layout.paging_network_state_view_holder -> 2
+                            else -> 1
+                        }
+                }
+            }
+        } else {
+            LinearLayoutManager(recyclerView.context)
+        }
+        this.isGridMode = isGridMode
+        recyclerView.layoutManager = layoutManager
+    }
 
     sealed class Item {
         data class Header(

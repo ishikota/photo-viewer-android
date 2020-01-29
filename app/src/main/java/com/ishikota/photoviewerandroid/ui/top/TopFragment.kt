@@ -13,7 +13,7 @@ import com.ishikota.photoviewerandroid.databinding.TopFragmentBinding
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.attachTabLayoutAdapter
 import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListFragment
-import com.ishikota.photoviewerandroid.ui.photolist.PhotoListFragment
+import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListFragment
 
 class TopFragment : Fragment() {
 
@@ -43,7 +43,7 @@ class TopFragment : Fragment() {
         }
 
         val tabs = listOf<TabElement>(
-            PhotoListFragment(),
+            TopPhotoListFragment(),
             CollectionListFragment()
         )
         binding.viewPager.attachTabLayoutAdapter(tabs, childFragmentManager)

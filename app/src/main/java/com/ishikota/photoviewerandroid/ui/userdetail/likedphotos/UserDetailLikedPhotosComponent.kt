@@ -2,7 +2,7 @@ package com.ishikota.photoviewerandroid.ui.userdetail.likedphotos
 
 import dagger.Subcomponent
 
-@Subcomponent(modules = [UserDetailLikedPhotosViewModelModule::class, UserDetailLikedPhotosModule::class])
+@Subcomponent(modules = [UserDetailLikedPhotosModule::class])
 interface UserDetailLikedPhotosComponent {
     @Subcomponent.Factory
     interface Factory {

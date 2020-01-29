@@ -3,21 +3,20 @@ package com.ishikota.photoviewerandroid.ui.photolist
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
-import javax.inject.Inject
+import androidx.lifecycle.ViewModelProvider
 
-class PhotoListViewModel @Inject constructor(
-    private val pagingRepository: PhotoListPagingRepository
+class PhotoListViewModel<P>(
+    private val pagingRepository: PhotoListPagingRepository<P>
 ) : ViewModel() {
-    private val listOrder = MutableLiveData<PhotoRepository.Order>(DEFAULT_ORDER)
-    private val listing = Transformations.map(listOrder) { pagingRepository.getPhotos(it) }
+    private val params = MutableLiveData<P>()
+    private val listing = Transformations.map(params) { pagingRepository.getPhotos(it) }
 
     val pagedList = Transformations.switchMap(listing) { it.pagedList }
     val initialLoadNetworkState = Transformations.switchMap(listing) { it.initialLoadNetworkState }
     val loadMoreNetworkState = Transformations.switchMap(listing) { it.loadMoreNetworkState }
 
-    fun updateListOrder(order: PhotoRepository.Order) {
-        listOrder.postValue(order)
+    fun updateLoadParams(loadParams: P) {
+        params.postValue(loadParams)
     }
 
     fun refresh() {
@@ -32,7 +31,15 @@ class PhotoListViewModel @Inject constructor(
         listing.value?.clear?.invoke()
     }
 
-    companion object {
-        private val DEFAULT_ORDER = PhotoRepository.Order.POPULAR
+    class Factory<P>(
+        private val pagingRepository: PhotoListPagingRepository<P>
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+            if (modelClass.isAssignableFrom(PhotoListViewModel::class.java)) {
+                PhotoListViewModel(pagingRepository) as T
+            } else {
+                throw IllegalArgumentException("Unknown view model class.")
+            }
     }
 }

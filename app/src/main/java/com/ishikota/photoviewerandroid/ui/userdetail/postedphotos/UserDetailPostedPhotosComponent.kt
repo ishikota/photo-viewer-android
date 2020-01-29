@@ -2,7 +2,7 @@ package com.ishikota.photoviewerandroid.ui.userdetail.postedphotos
 
 import dagger.Subcomponent
 
-@Subcomponent(modules = [UserDetailPostedPhotosViewModelModule::class, UserDetailPostedPhotosModule::class])
+@Subcomponent(modules = [UserDetailPostedPhotosModule::class])
 interface UserDetailPostedPhotosComponent {
     @Subcomponent.Factory
     interface Factory {

@@ -1,4 +1,4 @@
-package com.ishikota.photoviewerandroid.ui.userdetail.photolist
+package com.ishikota.photoviewerandroid.ui.userdetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,30 +8,32 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
-import com.ishikota.photoviewerandroid.databinding.UserdetailPhotolistFragmentBinding
-import com.ishikota.photoviewerandroid.di.ViewModelFactory
+import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
 import com.ishikota.photoviewerandroid.ui.photolist.PhotoListAdapter
-import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailFragmentDirections
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListPagingRepository
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListViewModel
 import javax.inject.Inject
 
+// Base class for photo list page in UserDetail
+// Used by UserDetailLikedPhotosFragment, UserDetailPostedPhotosFragment
 open class UserDetailPhotoListFragment: Fragment() {
 
     private val userName: String by lazy { arguments?.getString(EXTRA_USER_NAME)!! }
 
-    private lateinit var binding: UserdetailPhotolistFragmentBinding
+    private lateinit var binding: PhotolistFragmentBinding
 
     private lateinit var adapter: PhotoListAdapter
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var pagingRepository: PhotoListPagingRepository<String>
 
-    private val viewModel: UserDetailPhotoListViewModel by lazy {
+    private val viewModel: PhotoListViewModel<String> by lazy {
         ViewModelProviders.of(
-            this, viewModelFactory
-        ).get(UserDetailPhotoListViewModel::class.java)
+            this, PhotoListViewModel.Factory(pagingRepository)
+        ).get(PhotoListViewModel::class.java) as PhotoListViewModel<String>
     }
 
     override fun onCreateView(
@@ -39,7 +41,7 @@ open class UserDetailPhotoListFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = UserdetailPhotolistFragmentBinding.inflate(inflater, container, false)
+        binding = PhotolistFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -55,6 +57,7 @@ open class UserDetailPhotoListFragment: Fragment() {
             onGridChangeRequested = { /* Never called in this fragment */ }
         )
         binding.recyclerView.adapter = adapter
+        adapter.updateLayoutManager(binding.recyclerView, isGridMode = false)
 
         viewModel.pagedList.observe(this, NonNullObserver {
             adapter.submitList(it)
@@ -72,7 +75,7 @@ open class UserDetailPhotoListFragment: Fragment() {
             adapter.setNetworkState(it)
         })
 
-        viewModel.setUserName(userName)
+        viewModel.updateLoadParams(userName)
     }
 
     private fun navigateToPhotoDetail(photo: Photo) {

@@ -1,21 +1,20 @@
-package com.ishikota.photoviewerandroid.ui.photolist
+package com.ishikota.photoviewerandroid.ui.top.photolist
 
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListAdapter
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListUseCase
 import io.reactivex.Single
 
-interface LoadPhotoListUseCase {
-    fun execute(page: Int, listOrder: PhotoRepository.Order): Single<List<PhotoListAdapter.Item>>
-}
-
-class LoadPhotoListUseCaseImpl(
+class TopPhotoListUseCase(
     private val photoRepository: PhotoRepository
-) : LoadPhotoListUseCase {
+) : PhotoListUseCase<PhotoRepository.Order> {
+
     override fun execute(
         page: Int,
-        listOrder: PhotoRepository.Order
+        params: PhotoRepository.Order
     ): Single<List<PhotoListAdapter.Item>> {
         val photoItems: Single<List<PhotoListAdapter.Item>> =
-            photoRepository.getPhotos(page, listOrder).map { photos ->
+            photoRepository.getPhotos(page, params).map { photos ->
                 photos.map { PhotoListAdapter.Item.PhotoItem(it) }
             }
 
@@ -23,7 +22,7 @@ class LoadPhotoListUseCaseImpl(
             // Append header item to top of the list
             photoItems.map {
                 val items = mutableListOf<PhotoListAdapter.Item>()
-                items.add(PhotoListAdapter.Item.Header(listOrder))
+                items.add(PhotoListAdapter.Item.Header(params))
                 items.addAll(it)
                 items
             }
