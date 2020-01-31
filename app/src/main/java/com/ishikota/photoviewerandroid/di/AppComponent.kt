@@ -3,6 +3,7 @@ package com.ishikota.photoviewerandroid.di
 import com.ishikota.photoviewerandroid.ui.MainActivity
 import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
+import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListComponent
 import com.ishikota.photoviewerandroid.ui.top.collectionlist.TopCollectionListComponent
 import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
@@ -34,4 +35,5 @@ interface AppComponent {
     fun userDetailComponent(): UserDetailComponent.Factory
     fun userDetailPostedPhotosComponent(): UserDetailPostedPhotosComponent.Factory
     fun userDetailLikedPhotosComponent(): UserDetailLikedPhotosComponent.Factory
+    fun searchPhotoListComponent(): SearchPhotoListComponent.Factory
 }

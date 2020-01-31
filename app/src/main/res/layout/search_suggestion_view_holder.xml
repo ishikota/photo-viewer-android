@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <variable
+            name="item"
+            type="com.ishikota.photoviewerandroid.ui.search.SearchSuggestionRecyclerViewAdapter.Item" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@string/icon"
+            android:padding="16dp"
+            android:src="@drawable/ic_history_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{item.word}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Suggestion Word" />
+
+        <ImageView
+            android:id="@+id/icon_lift_suggestion"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@string/icon"
+            android:padding="16dp"
+            android:src="@drawable/ic_arrow_upward_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

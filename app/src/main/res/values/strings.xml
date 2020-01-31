@@ -14,6 +14,7 @@
     <string name="tags">Tags</string>
     <string name="posted">Posted</string>
     <string name="liked">Liked</string>
+    <string name="search_photos">Search Photos</string>
     <plurals name="photos">
         <item quantity="one">%d photo</item>
         <item quantity="other">%d photos</item>
