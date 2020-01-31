@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.TabElement
-import com.ishikota.photoviewerandroid.ui.userdetail.photolist.UserDetailPhotoListFragment
+import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailPhotoListFragment
 
 class UserDetailLikedPhotosFragment : UserDetailPhotoListFragment(), TabElement {
 

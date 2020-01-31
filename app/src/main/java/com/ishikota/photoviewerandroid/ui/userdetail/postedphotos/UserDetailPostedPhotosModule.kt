@@ -1,30 +1,17 @@
 package com.ishikota.photoviewerandroid.ui.userdetail.postedphotos
 
-import androidx.lifecycle.ViewModel
 import com.ishikota.photoviewerandroid.data.repository.UserRepository
-import com.ishikota.photoviewerandroid.di.ViewModelKey
-import com.ishikota.photoviewerandroid.ui.userdetail.photolist.UserDetailPhotoListPagingRepository
-import com.ishikota.photoviewerandroid.ui.userdetail.photolist.UserDetailPhotoListViewModel
-import dagger.Binds
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListPagingRepository
 import dagger.Module
 import dagger.Provides
-import dagger.multibindings.IntoMap
 
 @Module
 class UserDetailPostedPhotosModule {
     @Provides
     fun provideUserDetailPostedPhotosPagingRepository(
         userRepository: UserRepository
-    ): UserDetailPhotoListPagingRepository =
-        UserDetailPhotoListPagingRepository(
+    ): PhotoListPagingRepository<String> =
+        PhotoListPagingRepository(
             UserDetailPostedPhotosUseCase(userRepository)
         )
-}
-
-@Module
-abstract class UserDetailPostedPhotosViewModelModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(UserDetailPhotoListViewModel::class)
-    abstract fun bindViewModel(viewModel: UserDetailPhotoListViewModel): ViewModel
 }

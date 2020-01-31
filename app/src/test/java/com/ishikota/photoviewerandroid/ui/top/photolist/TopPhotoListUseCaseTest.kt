@@ -1,9 +1,10 @@
-package com.ishikota.photoviewerandroid.ui.photolist
+package com.ishikota.photoviewerandroid.ui.top.photolist
 
 import com.google.common.truth.Expect
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.sampledata.buildSamplePhoto
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListAdapter
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
 import org.junit.Before
@@ -12,7 +13,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class LoadPhotoListUseCaseTest {
+class TopPhotoListUseCaseTest {
 
     @Rule
     @JvmField
@@ -21,12 +22,12 @@ class LoadPhotoListUseCaseTest {
     @Mock
     private lateinit var photoRepository: PhotoRepository
 
-    private lateinit var useCase: LoadPhotoListUseCase
+    private lateinit var useCase: TopPhotoListUseCase
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        useCase = LoadPhotoListUseCaseImpl(photoRepository)
+        useCase = TopPhotoListUseCase(photoRepository)
     }
 
     @Test

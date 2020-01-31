@@ -1,4 +1,4 @@
-package com.ishikota.photoviewerandroid.ui.photolist
+package com.ishikota.photoviewerandroid.ui.top.photolist
 
 import android.content.Context
 import android.os.Bundle
@@ -9,22 +9,22 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
-import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListAdapter
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListPagingRepository
+import com.ishikota.photoviewerandroid.ui.photolist.PhotoListViewModel
 import com.ishikota.photoviewerandroid.ui.top.TopFragmentDirections
 import javax.inject.Inject
 
-class PhotoListFragment : Fragment(), TabElement {
+class TopPhotoListFragment : Fragment(), TabElement {
 
     override val title: Int? = R.string.top_tab_photo
 
@@ -35,17 +35,17 @@ class PhotoListFragment : Fragment(), TabElement {
     private lateinit var adapter: PhotoListAdapter
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var pagingRepository: PhotoListPagingRepository<PhotoRepository.Order>
 
-    private val viewModel: PhotoListViewModel by lazy {
+    private val viewModel: PhotoListViewModel<PhotoRepository.Order> by lazy {
         ViewModelProviders.of(
-            this, viewModelFactory
-        ).get(PhotoListViewModel::class.java)
+            this, PhotoListViewModel.Factory(pagingRepository)
+        ).get(PhotoListViewModel::class.java) as PhotoListViewModel<PhotoRepository.Order>
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        appComponent().photoListComponent().create().inject(this)
+        appComponent().topPhotoListComponent().create().inject(this)
     }
 
     override fun onCreateView(
@@ -69,7 +69,7 @@ class PhotoListFragment : Fragment(), TabElement {
             onGridChangeRequested = this::showSwitchGridModePopupMenu
         )
         binding.recyclerView.adapter = adapter
-        setLayoutManager(adapter.isGridMode)
+        adapter.updateLayoutManager(binding.recyclerView, adapter.isGridMode)
 
         viewModel.pagedList.observe(this, NonNullObserver {
             adapter.submitList(it)
@@ -86,31 +86,13 @@ class PhotoListFragment : Fragment(), TabElement {
         viewModel.loadMoreNetworkState.observe(this, NonNullObserver {
             adapter.setNetworkState(it)
         })
+        viewModel.updateLoadParams(PhotoRepository.Order.POPULAR)
 
     }
 
     private fun navigateToPhotoDetail(photo: Photo) {
         val action = TopFragmentDirections.actionTopFragmentToPhotoDetailFragment(photo.id)
         findNavController().navigate(action)
-    }
-
-    private fun setLayoutManager(isGridMode: Boolean) {
-        val layoutManager = if (isGridMode) {
-            GridLayoutManager(requireContext(), 2).apply {
-                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int =
-                        when (adapter.getItemViewType(position)) {
-                            R.layout.photolist_filter_view_holder,
-                            R.layout.paging_network_state_view_holder -> 2
-                            else -> 1
-                        }
-                }
-            }
-        } else {
-            LinearLayoutManager(requireContext())
-        }
-        adapter.isGridMode = isGridMode
-        binding.recyclerView.layoutManager = layoutManager
     }
 
     private fun showListOrderPopupMenu(v: View) {
@@ -123,7 +105,7 @@ class PhotoListFragment : Fragment(), TabElement {
                     R.id.oldest -> PhotoRepository.Order.OLDEST
                     else -> throw IllegalArgumentException("unexpected id=${item.itemId}")
                 }
-                viewModel.updateListOrder(order)
+                viewModel.updateLoadParams(order)
                 true
             }
         }.show()
@@ -134,8 +116,14 @@ class PhotoListFragment : Fragment(), TabElement {
             menuInflater.inflate(R.menu.photolist_grid, menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.linear -> setLayoutManager(isGridMode = false)
-                    R.id.grid -> setLayoutManager(isGridMode = true)
+                    R.id.linear -> adapter.updateLayoutManager(
+                        binding.recyclerView,
+                        isGridMode = false
+                    )
+                    R.id.grid -> adapter.updateLayoutManager(
+                        binding.recyclerView,
+                        isGridMode = true
+                    )
                     else -> throw IllegalArgumentException("unexpected id=${item.itemId}")
                 }
                 true
