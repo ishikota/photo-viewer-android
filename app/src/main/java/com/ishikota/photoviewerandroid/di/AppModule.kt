@@ -32,4 +32,12 @@ class AppModule {
     ): UserRepository {
         return UserRepositoryImpl(service)
     }
+
+    @Singleton
+    @Provides
+    fun provideSearchRepository(
+        service: PhotoViewerService
+    ): SearchRepository {
+        return SearchRepositoryImpl(service)
+    }
 }

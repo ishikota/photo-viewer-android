@@ -1,8 +1,7 @@
 package com.ishikota.photoviewerandroid.data.api
 
+import com.ishikota.photoviewerandroid.data.api.entities.*
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
-import com.ishikota.photoviewerandroid.data.api.entities.Photo
-import com.ishikota.photoviewerandroid.data.api.entities.User
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -69,4 +68,24 @@ interface PhotoViewerService {
         @Query("per_page") perPage: Int
     ): Single<List<Collection>>
 
+    @GET("/search/photos")
+    fun searchPhotos(
+        @Query("query") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<SearchPhotos>
+
+    @GET("/search/collections")
+    fun searchCollections(
+        @Query("query") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<SearchCollections>
+
+    @GET("/search/users")
+    fun searchUsers(
+        @Query("query") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<SearchUsers>
 }

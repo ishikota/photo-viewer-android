@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ishikota.photoviewerandroid.databinding.TopFragmentBinding
 import com.ishikota.photoviewerandroid.infra.TabElement
@@ -39,7 +40,8 @@ class TopFragment : Fragment() {
             Toast.makeText(requireContext(), "TODO account", Toast.LENGTH_SHORT).show()
         }
         binding.menuSearch.setOnClickListener {
-            Toast.makeText(requireContext(), "TODO search", Toast.LENGTH_SHORT).show()
+            val action = TopFragmentDirections.actionTopFragmentToSearchFragment()
+            findNavController().navigate(action)
         }
 
         val tabs = listOf<TabElement>(
