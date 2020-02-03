@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
+import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.PhotodetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
@@ -62,13 +63,7 @@ class PhotoDetailFragment: Fragment() {
         binding.viewModel = viewModel
         adapter = PhotoDetailAdapter(
             onUserClicked = this::navigateToUserDetail,
-            onTagClicked = { tag ->
-                Toast.makeText(
-                    requireContext(),
-                    "tag clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
+            onTagClicked = this::navigateToSearchFragment,
             onShareClicked = { photo ->
                 Toast.makeText(
                     requireContext(),
@@ -92,6 +87,11 @@ class PhotoDetailFragment: Fragment() {
     private fun navigateToUserDetail(user: User) {
         val action = PhotoDetailFragmentDirections.
             actionPhotoDetailFragmentToUserDetailFragment(user.userName, user.name)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToSearchFragment(tag: Photo.Tag) {
+        val action = PhotoDetailFragmentDirections.actionPhotoDetailFragmentToSearchFragment(tag.title)
         findNavController().navigate(action)
     }
 }
