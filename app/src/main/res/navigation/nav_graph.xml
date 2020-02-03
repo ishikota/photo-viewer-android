@@ -74,5 +74,9 @@
         <action
             android:id="@+id/action_searchFragment_to_photoDetailFragment"
             app:destination="@id/photoDetailFragment" />
+        <argument
+            android:name="searchWord"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

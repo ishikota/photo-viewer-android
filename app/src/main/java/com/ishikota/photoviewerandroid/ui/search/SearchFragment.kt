@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.databinding.SearchFragmentBinding
@@ -21,6 +22,8 @@ import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListFragment
 
 class SearchFragment : Fragment() {
+
+    private val safeArgs: SearchFragmentArgs by navArgs()
 
     private lateinit var binding: SearchFragmentBinding
 
@@ -98,6 +101,11 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, SearchPhotoListFragment())
             .commit()
+
+        safeArgs.searchWord?.let {
+            binding.editQuery.setText(it)
+            startSearch()
+        }
     }
 
     private fun dismissKeyboard(editText: EditText) {

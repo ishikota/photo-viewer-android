@@ -40,7 +40,7 @@ class TopFragment : Fragment() {
             Toast.makeText(requireContext(), "TODO account", Toast.LENGTH_SHORT).show()
         }
         binding.menuSearch.setOnClickListener {
-            val action = TopFragmentDirections.actionTopFragmentToSearchFragment()
+            val action = TopFragmentDirections.actionTopFragmentToSearchFragment(null)
             findNavController().navigate(action)
         }
 
