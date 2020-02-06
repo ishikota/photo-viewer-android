@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import androidx.core.hardware.display.DisplayManagerCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ishikota.photoviewerandroid.R
+import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
+import com.ishikota.photoviewerandroid.databinding.CollectiondetailCarouselViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PagingNetworkStateViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotolistPhotoViewHolderBinding
 import com.ishikota.photoviewerandroid.infra.fitViewSizeToPhoto
@@ -20,6 +23,7 @@ import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkStateViewHolder
 
 class CollectionDetailAdapter(
     private val onPhotoClicked: (Photo) -> Unit,
+    private val onRelatedCollectionClicked: (Collection) -> Unit,
     private val retryCallback: () -> Unit
 ) : PagedListAdapter<CollectionDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
@@ -29,7 +33,14 @@ class CollectionDetailAdapter(
         if (hasExtraRow() && position == itemCount - 1) {
             R.layout.paging_network_state_view_holder
         } else {
-            R.layout.photolist_photo_view_holder
+            when (getItem(position)) {
+                is Item.PhotoItem -> R.layout.photolist_photo_view_holder
+                is Item.RelatedCollections -> R.layout.collectiondetail_carousel_view_holder
+                else -> throw IllegalArgumentException(
+                    "unexpected item. item=${getItem(position)}"
+                )
+            }
+
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
@@ -47,6 +58,12 @@ class CollectionDetailAdapter(
                 ),
                 onPhotoClicked
             )
+            R.layout.collectiondetail_carousel_view_holder -> CarouselViewHolder(
+                CollectiondetailCarouselViewHolderBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                ),
+                onRelatedCollectionClicked
+            )
             else -> throw IllegalArgumentException("unexpected viewType. viewType = $viewType")
         }
 
@@ -57,6 +74,7 @@ class CollectionDetailAdapter(
             val item = getItem(position)
             when {
                 holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item)
+                holder is CarouselViewHolder && item is Item.RelatedCollections -> holder.bind(item)
             }
         }
     }
@@ -85,6 +103,7 @@ class CollectionDetailAdapter(
 
     sealed class Item {
         data class PhotoItem(val entity: Photo) : Item()
+        data class RelatedCollections(val collections: List<Collection>) : Item()
     }
 
     private class PhotoViewHolder(
@@ -108,6 +127,19 @@ class CollectionDetailAdapter(
             DisplayManagerCompat.getInstance(context).getDisplay(Display.DEFAULT_DISPLAY)
                 ?.getMetrics(metrics)
             return metrics.widthPixels
+        }
+    }
+
+    private class CarouselViewHolder(
+        private val binding: CollectiondetailCarouselViewHolderBinding,
+        private val onRelatedCollectionClicked: (Collection) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: Item.RelatedCollections) {
+            binding.recyclerView.layoutManager = LinearLayoutManager(binding.root.context).apply {
+                orientation = RecyclerView.HORIZONTAL
+            }
+            binding.recyclerView.adapter = CollectionDetailCarouselAdapter(item, onRelatedCollectionClicked)
         }
     }
 

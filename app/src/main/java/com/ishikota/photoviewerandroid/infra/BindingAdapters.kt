@@ -49,3 +49,14 @@ private object CircularOutlineProvider : ViewOutlineProvider() {
         )
     }
 }
+
+@BindingAdapter("roundCorner")
+fun roundCorner(view: View, radius: Float) {
+    val roundOutlineProvider = object: ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            outline.setRoundRect(0, 0, view.width, view.height, radius)
+        }
+    }
+    view.clipToOutline = true
+    view.outlineProvider = roundOutlineProvider
+}

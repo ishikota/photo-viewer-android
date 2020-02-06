@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_collectionDetailFragment_to_userDetailFragment"
             app:destination="@id/userDetailFragment" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_self"
+            app:destination="@id/collectionDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/userDetailFragment"
