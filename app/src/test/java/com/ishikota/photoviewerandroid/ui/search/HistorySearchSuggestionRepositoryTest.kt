@@ -1,8 +1,11 @@
 package com.ishikota.photoviewerandroid.ui.search
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Expect
+import com.ishikota.photoviewerandroid.data.PhotoViewerPreferenceImpl
+import com.ishikota.photoviewerandroid.di.PreferenceModule
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -19,20 +22,20 @@ class HistorySearchSuggestionRepositoryTest {
     @JvmField
     val expect: Expect = Expect.create()
 
-    private val preferenceName = "search_suggestion_history_preference"
-
     private lateinit var repository: HistorySearchSuggestionRepository
     private lateinit var context: Context
+    private lateinit var preference: SharedPreferences
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        repository = HistorySearchSuggestionRepository(context, 2)
+        preference = context.getSharedPreferences(PreferenceModule.PREF_NAME, Context.MODE_PRIVATE)
+        repository = HistorySearchSuggestionRepository(PhotoViewerPreferenceImpl(preference), 2)
     }
 
     @After
     fun tearDown() {
-        context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE).edit().clear().apply()
+        preference.edit().clear().apply()
     }
 
     @Test

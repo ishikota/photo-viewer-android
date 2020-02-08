@@ -18,8 +18,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.databinding.SearchFragmentBinding
+import com.ishikota.photoviewerandroid.di.ViewModelFactory
+import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListFragment
+import javax.inject.Inject
 
 class SearchFragment : Fragment() {
 
@@ -29,11 +32,18 @@ class SearchFragment : Fragment() {
 
     private lateinit var adapter: SearchSuggestionRecyclerViewAdapter
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: SearchViewModel by lazy {
         ViewModelProviders.of(
-            this,
-            SearchViewModel.Factory(HistorySearchSuggestionRepository(requireContext()))
+            this, viewModelFactory
         ).get(SearchViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appComponent().searchComponent().create().inject(this)
     }
 
     override fun onCreateView(

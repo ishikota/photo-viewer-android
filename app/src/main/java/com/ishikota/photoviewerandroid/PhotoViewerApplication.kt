@@ -3,6 +3,7 @@ package com.ishikota.photoviewerandroid
 import android.app.Application
 import com.ishikota.photoviewerandroid.di.DaggerAppComponent
 import com.ishikota.photoviewerandroid.di.NetworkModule
+import com.ishikota.photoviewerandroid.di.PreferenceModule
 import com.ishikota.photoviewerandroid.infra.flipper.FlipperWrapper
 import com.ishikota.photoviewerandroid.infra.timber.ConsoleDebugTree
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -15,7 +16,8 @@ class PhotoViewerApplication: Application() {
             NetworkModule(
                 endpoint = BuildConfig.API_ENDPOINT,
                 appAccessKey = BuildConfig.APP_ACCESS_KEY
-            )
+            ),
+            PreferenceModule(this)
         )
     }
 
