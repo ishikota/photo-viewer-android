@@ -2,6 +2,7 @@ package com.ishikota.photoviewerandroid.di
 
 import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
+import com.ishikota.photoviewerandroid.ui.search.SearchComponent
 import com.ishikota.photoviewerandroid.ui.top.collectionlist.TopCollectionListComponent
 import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
@@ -16,6 +17,7 @@ import dagger.Module
     CollectionDetailComponent::class,
     UserDetailComponent::class,
     UserDetailPostedPhotosComponent::class,
-    UserDetailLikedPhotosComponent::class
+    UserDetailLikedPhotosComponent::class,
+    SearchComponent::class
 ])
 class FragmentComponents
