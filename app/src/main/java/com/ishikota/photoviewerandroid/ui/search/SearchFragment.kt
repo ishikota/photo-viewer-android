@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.ishikota.photoviewerandroid.R
+import com.ishikota.photoviewerandroid.data.PhotoViewerPreferenceImpl
 import com.ishikota.photoviewerandroid.databinding.SearchFragmentBinding
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListFragment
@@ -32,7 +33,9 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by lazy {
         ViewModelProviders.of(
             this,
-            SearchViewModel.Factory(HistorySearchSuggestionRepository(requireContext()))
+            SearchViewModel.Factory(HistorySearchSuggestionRepository(PhotoViewerPreferenceImpl(
+                requireContext().getSharedPreferences("search_suggestion_history_preference", Context.MODE_PRIVATE)  // TODO di
+            )))
         ).get(SearchViewModel::class.java)
     }
 
