@@ -16,6 +16,9 @@ class CollectionRepositoryImpl(val photoViewerService: PhotoViewerService) : Col
     override fun getCollectionPhotos(id: String, page: Int): Single<List<Photo>> =
         photoViewerService.getCollectionPhotos(id, page, PER_PAGE)
 
+    override fun getCollectionsRelatedCollections(id: String): Single<List<Collection>> =
+        photoViewerService.getCollectionsRelatedCollections(id)
+
     companion object {
         const val PER_PAGE = 10
     }

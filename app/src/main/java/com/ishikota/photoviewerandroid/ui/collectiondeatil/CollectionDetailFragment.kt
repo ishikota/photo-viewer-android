@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
+import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectiondetailFragmentBinding
@@ -87,6 +88,7 @@ class CollectionDetailFragment : Fragment() {
 
         adapter = CollectionDetailAdapter(
             onPhotoClicked = this::navigateToPhotoDetail,
+            onRelatedCollectionClicked = this::navigateToRelatedCollection,
             retryCallback = { viewModel.retry() }
         )
         binding.recyclerView.adapter = adapter
@@ -121,6 +123,12 @@ class CollectionDetailFragment : Fragment() {
     private fun navigateToUserDetail(user: User) {
         val action = CollectionDetailFragmentDirections.
             actionCollectionDetailFragmentToUserDetailFragment(user.userName, user.name)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToRelatedCollection(collection: Collection) {
+        val action = CollectionDetailFragmentDirections
+            .actionCollectionDetailFragmentSelf(collection.id, collection.title)
         findNavController().navigate(action)
     }
 }
