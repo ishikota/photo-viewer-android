@@ -16,7 +16,14 @@ class PhotoViewerPreferenceImpl(
         return str?.split(",") ?: emptyList()
     }
 
+    override fun saveBearerToken(token: String) {
+        preference.edit { putString(KEY_BEARER_TOKEN, token) }
+    }
+
+    override fun getBearerToken(): String? = preference.getString(KEY_BEARER_TOKEN, null)
+
     companion object {
         private const val KEY_SEARCH_SUGGESTION_HISTORIES = "KEY_SEARCH_SUGGESTION_HISTORIES"
+        private const val KEY_BEARER_TOKEN = "KEY_BEARER_TOKEN"
     }
 }
