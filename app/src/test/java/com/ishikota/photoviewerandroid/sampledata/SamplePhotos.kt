@@ -4,7 +4,8 @@ import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.di.NetworkModule
 
 inline fun<reified T> jsonToModel(json: String): T? = NetworkModule(
-    endpoint = "https://dummy.com/",
+    apiEndpoint = "https://dummy.com/",
+    oauthEndpoint = "https://dummy.com",
     appAccessKey = "dummy_key"
 ).provideMoshi().adapter(T::class.java).fromJson(json)
 
