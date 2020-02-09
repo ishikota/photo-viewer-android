@@ -1,11 +1,13 @@
 package com.ishikota.photoviewerandroid.di
 
 import com.ishikota.photoviewerandroid.BuildConfig
+import com.ishikota.photoviewerandroid.data.PhotoViewerPreference
 import com.ishikota.photoviewerandroid.data.api.PhotoViewerLoginService
 import com.ishikota.photoviewerandroid.data.api.PhotoViewerService
 import com.ishikota.photoviewerandroid.infra.flipper.FlipperWrapper
 import com.ishikota.photoviewerandroid.infra.format
 import com.ishikota.photoviewerandroid.infra.okhttp.ApiAccessKeyInterceptor
+import com.ishikota.photoviewerandroid.infra.okhttp.OauthTokenInterceptor
 import com.ishikota.photoviewerandroid.infra.toOffsetDateTime
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
@@ -51,10 +53,12 @@ class NetworkModule(
     @Provides
     @OkHttpClientQualifier(OkHttpClientQualifier.Type.Api)
     fun provideApiOkHttpClient(
-        @OkHttpClientQualifier(OkHttpClientQualifier.Type.Default) defaultOkHttpClient: OkHttpClient
+        @OkHttpClientQualifier(OkHttpClientQualifier.Type.Default) defaultOkHttpClient: OkHttpClient,
+        preference: PhotoViewerPreference
     ): OkHttpClient = defaultOkHttpClient
         .newBuilder()
         .addInterceptor(ApiAccessKeyInterceptor(appAccessKey))
+        .addInterceptor(OauthTokenInterceptor(preference))
         .build()
 
     @Singleton
