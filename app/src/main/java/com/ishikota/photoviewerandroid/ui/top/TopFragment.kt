@@ -78,8 +78,9 @@ class TopFragment : Fragment() {
             findNavController().navigate(R.id.action_global_loginFragment)
         })
         viewModel.navigateToMeAction.observe(this, EventObserver { me ->
-            val action =
-                TopFragmentDirections.actionTopFragmentToUserDetailFragment(me.userName, me.name)
+            val action = TopFragmentDirections.actionTopFragmentToUserDetailFragment(
+                me.userName, me.name, true
+            )
             findNavController().navigate(action)
         })
         viewModel.errorMessage.observe(this, EventObserver { errorMessageId ->

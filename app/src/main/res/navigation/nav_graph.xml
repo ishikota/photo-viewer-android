@@ -72,6 +72,10 @@
         <action
             android:id="@+id/action_userDetailFragment_to_photoDetailFragment"
             app:destination="@id/photoDetailFragment" />
+        <argument
+            android:name="allowEdit"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -92,4 +96,8 @@
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.editprofile.EditProfileFragment"
+        android:label="EditProfileFragment" />
 </navigation>

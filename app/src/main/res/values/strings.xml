@@ -21,6 +21,7 @@
     <string name="login_success_message">Login Succeeded. Please retry your action.</string>
     <string name="login_failure_message">Login Failed</string>
     <string name="account_fetch_failure">Failed to fetch your account info</string>
+    <string name="edit_profile">Edit Profile</string>
     <plurals name="photos">
         <item quantity="one">%d photo</item>
         <item quantity="other">%d photos</item>
