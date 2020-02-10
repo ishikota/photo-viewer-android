@@ -13,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ishikota.photoviewerandroid.R
-import com.ishikota.photoviewerandroid.data.repository.OauthTokenRepository
 import com.ishikota.photoviewerandroid.databinding.TopFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
@@ -27,9 +26,6 @@ import javax.inject.Inject
 class TopFragment : Fragment() {
 
     private lateinit var binding: TopFragmentBinding
-
-    @Inject
-    lateinit var oauthTokenRepository: OauthTokenRepository
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
