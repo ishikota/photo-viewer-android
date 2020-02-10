@@ -10,4 +10,5 @@ interface UserRepository {
     fun getUserPostedPhotos(userName: String, page: Int): Single<List<Photo>>
     fun getUserLikedPhotos(userName: String, page: Int): Single<List<Photo>>
     fun getUserCollections(userName: String, page: Int): Single<List<Collection>>
+    fun getMe(): Single<User>
 }

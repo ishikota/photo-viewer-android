@@ -19,6 +19,8 @@ class UserRepositoryImpl(private val photoViewerService: PhotoViewerService) : U
     override fun getUserCollections(userName: String, page: Int): Single<List<Collection>> =
         photoViewerService.getUserCollections(userName, page, PER_PAGE)
 
+    override fun getMe(): Single<User> = photoViewerService.getMe()
+
     companion object {
         const val PER_PAGE = 10
         const val ORDER_BY = "latest"

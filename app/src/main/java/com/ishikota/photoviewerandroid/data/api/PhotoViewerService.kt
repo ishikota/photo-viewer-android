@@ -93,4 +93,7 @@ interface PhotoViewerService {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
     ): Single<SearchUsers>
+
+    @GET("/me")
+    fun getMe() :Single<User>
 }

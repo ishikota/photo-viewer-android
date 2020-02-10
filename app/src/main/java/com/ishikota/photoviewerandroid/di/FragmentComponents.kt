@@ -3,6 +3,7 @@ package com.ishikota.photoviewerandroid.di
 import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
 import com.ishikota.photoviewerandroid.ui.search.SearchComponent
+import com.ishikota.photoviewerandroid.ui.top.TopComponent
 import com.ishikota.photoviewerandroid.ui.top.collectionlist.TopCollectionListComponent
 import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
@@ -11,6 +12,7 @@ import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPost
 import dagger.Module
 
 @Module(subcomponents = [
+    TopComponent::class,
     TopPhotoListComponent::class,
     TopCollectionListComponent::class,
     PhotoDetailComponent::class,
