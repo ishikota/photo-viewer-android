@@ -14,7 +14,8 @@ class PhotoViewerApplication: Application() {
     val appComponent by lazy {
         DaggerAppComponent.factory().create(
             NetworkModule(
-                endpoint = BuildConfig.API_ENDPOINT,
+                apiEndpoint = BuildConfig.API_ENDPOINT,
+                oauthEndpoint = BuildConfig.OAUTH_ENDPOINT,
                 appAccessKey = BuildConfig.APP_ACCESS_KEY
             ),
             PreferenceModule(this)

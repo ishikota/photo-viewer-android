@@ -1,7 +1,11 @@
 package com.ishikota.photoviewerandroid.di
 
+import com.ishikota.photoviewerandroid.BuildConfig
+import com.ishikota.photoviewerandroid.data.PhotoViewerPreference
+import com.ishikota.photoviewerandroid.data.api.PhotoViewerLoginService
 import com.ishikota.photoviewerandroid.data.api.PhotoViewerService
 import com.ishikota.photoviewerandroid.data.repository.*
+import com.ishikota.photoviewerandroid.ui.login.LoginFragment
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -39,5 +43,20 @@ class AppModule {
         service: PhotoViewerService
     ): SearchRepository {
         return SearchRepositoryImpl(service)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOauthTokenRepository(
+        service: PhotoViewerLoginService,
+        preference: PhotoViewerPreference
+    ): OauthTokenRepository {
+        return OauthTokenRepositoryImpl(
+            service,
+            preference,
+            BuildConfig.APP_ACCESS_KEY,
+            BuildConfig.APP_SECRET_KEY,
+            LoginFragment.REDIRECT_URI
+        )
     }
 }

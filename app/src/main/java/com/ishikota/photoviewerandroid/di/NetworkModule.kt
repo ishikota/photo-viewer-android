@@ -1,10 +1,13 @@
 package com.ishikota.photoviewerandroid.di
 
 import com.ishikota.photoviewerandroid.BuildConfig
+import com.ishikota.photoviewerandroid.data.PhotoViewerPreference
+import com.ishikota.photoviewerandroid.data.api.PhotoViewerLoginService
 import com.ishikota.photoviewerandroid.data.api.PhotoViewerService
 import com.ishikota.photoviewerandroid.infra.flipper.FlipperWrapper
 import com.ishikota.photoviewerandroid.infra.format
 import com.ishikota.photoviewerandroid.infra.okhttp.ApiAccessKeyInterceptor
+import com.ishikota.photoviewerandroid.infra.okhttp.OauthTokenInterceptor
 import com.ishikota.photoviewerandroid.infra.toOffsetDateTime
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
@@ -21,7 +24,8 @@ import javax.inject.Singleton
 
 @Module
 class NetworkModule(
-    private val endpoint: String,
+    private val apiEndpoint: String,
+    private val oauthEndpoint: String,
     private val appAccessKey: String
 ) {
 
@@ -49,10 +53,12 @@ class NetworkModule(
     @Provides
     @OkHttpClientQualifier(OkHttpClientQualifier.Type.Api)
     fun provideApiOkHttpClient(
-        @OkHttpClientQualifier(OkHttpClientQualifier.Type.Default) defaultOkHttpClient: OkHttpClient
+        @OkHttpClientQualifier(OkHttpClientQualifier.Type.Default) defaultOkHttpClient: OkHttpClient,
+        preference: PhotoViewerPreference
     ): OkHttpClient = defaultOkHttpClient
         .newBuilder()
         .addInterceptor(ApiAccessKeyInterceptor(appAccessKey))
+        .addInterceptor(OauthTokenInterceptor(preference))
         .build()
 
     @Singleton
@@ -62,12 +68,27 @@ class NetworkModule(
         @OkHttpClientQualifier(OkHttpClientQualifier.Type.Api) okHttpClient: OkHttpClient
     ): PhotoViewerService {
         val retrofit = Retrofit.Builder()
-            .baseUrl(endpoint)
+            .baseUrl(apiEndpoint)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
         return retrofit.create(PhotoViewerService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providePhotoViewerLoginService(
+        moshi: Moshi,
+        @OkHttpClientQualifier(OkHttpClientQualifier.Type.Default) okHttpClient: OkHttpClient
+    ): PhotoViewerLoginService {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(oauthEndpoint)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+        return retrofit.create(PhotoViewerLoginService::class.java)
     }
 }
 

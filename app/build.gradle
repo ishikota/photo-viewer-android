@@ -36,6 +36,8 @@ android {
                 stringLiteral(secretProperties['secretkey'])
         buildConfigField "String", "API_ENDPOINT",
                 stringLiteral("https://api.unsplash.com/")
+        buildConfigField "String", "OAUTH_ENDPOINT",
+                stringLiteral("https://unsplash.com/")
     }
     buildTypes {
         release {
