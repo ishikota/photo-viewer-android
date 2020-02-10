@@ -6,7 +6,7 @@ import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailCompo
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
 import com.ishikota.photoviewerandroid.ui.search.SearchComponent
 import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListComponent
-import com.ishikota.photoviewerandroid.ui.top.TopFragment
+import com.ishikota.photoviewerandroid.ui.top.TopComponent
 import com.ishikota.photoviewerandroid.ui.top.collectionlist.TopCollectionListComponent
 import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListComponent
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailComponent
@@ -33,7 +33,7 @@ interface AppComponent {
     }
 
     fun inject(activity: MainActivity)
-    fun inject(fragment: TopFragment)
+    fun topComponent(): TopComponent.Factory
     fun topPhotoListComponent(): TopPhotoListComponent.Factory
     fun topCollectionListComponent(): TopCollectionListComponent.Factory
     fun photoDetailComponent(): PhotoDetailComponent.Factory
