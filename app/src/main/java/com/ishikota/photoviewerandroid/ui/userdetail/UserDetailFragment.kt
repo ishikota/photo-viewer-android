@@ -3,10 +3,12 @@ package com.ishikota.photoviewerandroid.ui.userdetail
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
@@ -100,7 +102,18 @@ open class UserDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.editProfileFragment -> {
-                // TODO
+                val user = viewModel.userDetail.value
+                if (user == null) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.user_detail_loading_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val action = UserDetailFragmentDirections
+                        .actionUserDetailFragmentToEditProfileFragment(user)
+                    findNavController().navigate(action)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

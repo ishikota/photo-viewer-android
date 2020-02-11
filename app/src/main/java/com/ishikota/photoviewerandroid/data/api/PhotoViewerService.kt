@@ -4,6 +4,7 @@ import com.ishikota.photoviewerandroid.data.api.entities.*
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -95,5 +96,13 @@ interface PhotoViewerService {
     ): Single<SearchUsers>
 
     @GET("/me")
-    fun getMe() :Single<User>
+    fun getMe(): Single<User>
+
+    @PUT("/me")
+    fun putMe(
+        @Query("first_name") fistName: String?,
+        @Query("last_name") lastName: String?,
+        @Query("location") location: String?,
+        @Query("bio") bio: String?
+    ): Single<User>
 }
