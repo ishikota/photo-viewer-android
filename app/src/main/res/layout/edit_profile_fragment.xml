@@ -45,6 +45,7 @@
             android:layout_marginTop="16dp"
             android:contentDescription="@string/photo"
             app:clipToCircle="@{true}"
+            android:foreground="?android:selectableItemBackground"
             app:imageFromUrl="@{user.profileImage.medium}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

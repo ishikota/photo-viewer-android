@@ -48,6 +48,13 @@ class EditProfileFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setupWithNavController(NavHostFragment.findNavController(this))
         binding.toolbar.title = ""
+        binding.userThumbnail.setOnClickListener {
+            Toast.makeText(
+                requireContext(),
+                R.string.update_thumbnail_not_supported_message,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
         binding.user = safeArgs.placeholderUser
 
