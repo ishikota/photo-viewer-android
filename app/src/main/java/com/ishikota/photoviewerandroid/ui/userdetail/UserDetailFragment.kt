@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.ishikota.photoviewerandroid.R
@@ -23,7 +21,7 @@ import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLiked
 import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosFragment
 import javax.inject.Inject
 
-class UserDetailFragment : Fragment() {
+open class UserDetailFragment : Fragment() {
 
     private val safeArgs: UserDetailFragmentArgs by navArgs()
 
@@ -66,14 +64,14 @@ class UserDetailFragment : Fragment() {
         binding.collapsingtoolbarlayout.isTitleEnabled = false
         binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
             if (i == -appBarLayout.totalScrollRange) {   // if completely collapsed
-                binding.toolbar.title = safeArgs.name
+                binding.toolbar.title = safeArgs.user.name
             } else {
                 binding.toolbar.title = ""
             }
         })
 
         binding.userdetailContents.retryButton.setOnClickListener {
-            viewModel.loadUserDetail(safeArgs.username)
+            viewModel.loadUserDetail(safeArgs.user.userName)
         }
 
         viewModel.userDetail.observe(this, NonNullObserver {
@@ -89,7 +87,7 @@ class UserDetailFragment : Fragment() {
             binding.tabLayout.setupWithViewPager(binding.viewPager)
         })
 
-        viewModel.loadUserDetail(safeArgs.username)
+        viewModel.loadUserDetail(safeArgs.user.userName)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -100,7 +98,12 @@ class UserDetailFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return item.onNavDestinationSelected(findNavController())
-                || super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.editProfileFragment -> {
+                // TODO
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

@@ -86,7 +86,7 @@ class PhotoDetailFragment: Fragment() {
 
     private fun navigateToUserDetail(user: User) {
         val action = PhotoDetailFragmentDirections.
-            actionPhotoDetailFragmentToUserDetailFragment(user.userName, user.name)
+            actionPhotoDetailFragmentToUserDetailFragment(user = user)
         findNavController().navigate(action)
     }
 
