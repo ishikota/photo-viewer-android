@@ -23,7 +23,7 @@ import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLiked
 import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosFragment
 import javax.inject.Inject
 
-open class UserDetailFragment : Fragment() {
+class UserDetailFragment : Fragment() {
 
     private val safeArgs: UserDetailFragmentArgs by navArgs()
 
