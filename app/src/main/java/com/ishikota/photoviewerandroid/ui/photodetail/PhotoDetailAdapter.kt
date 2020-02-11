@@ -18,6 +18,7 @@ import com.ishikota.photoviewerandroid.databinding.PhotodetailTagsViewHolderBind
 
 class PhotoDetailAdapter(
     private val onUserClicked: (User) -> Unit,
+    private val onLikeToggled: () -> Unit,
     private val onTagClicked: (Photo.Tag) -> Unit,
     private val onShareClicked: (Photo) -> Unit
 ) : ListAdapter<PhotoDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -36,6 +37,7 @@ class PhotoDetailAdapter(
                     LayoutInflater.from(parent.context), parent, false
                 ),
                 onUserClicked,
+                onLikeToggled,
                 onShareClicked
             )
             R.layout.photodetail_description_view_holder -> DescriptionViewHolder(
@@ -71,12 +73,16 @@ class PhotoDetailAdapter(
     private class PhotoViewHolder(
         private val binding: PhotodetailPhotoViewHolderBinding,
         private val onUserClicked: (User) -> Unit,
+        private val onLikeToggled: () -> Unit,
         private val onShareClicked: (Photo) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Item.PhotoItem) {
             binding.userContainer.setOnClickListener {
                 onUserClicked(item.entity.user)
+            }
+            binding.likeContainer.setOnClickListener {
+                onLikeToggled()
             }
             binding.iconShare.setOnClickListener {
                 onShareClicked(item.entity)
@@ -123,6 +129,10 @@ class PhotoDetailAdapter(
             override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean = when {
                 oldItem is Item.PhotoItem && newItem is Item.PhotoItem ->
                     oldItem.entity.id == newItem.entity.id
+                oldItem is Item.DescriptionItem && newItem is Item.DescriptionItem ->
+                    oldItem.description == newItem.description
+                oldItem is Item.TagsItem && newItem is Item.TagsItem ->
+                    oldItem.tags == newItem.tags
                 oldItem is Item.CollectionItem && newItem is Item.CollectionItem ->
                     oldItem.entity == newItem.entity
                 else -> false

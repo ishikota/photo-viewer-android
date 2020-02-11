@@ -63,6 +63,7 @@ class PhotoDetailFragment: Fragment() {
         binding.viewModel = viewModel
         adapter = PhotoDetailAdapter(
             onUserClicked = this::navigateToUserDetail,
+            onLikeToggled = { viewModel.toggleLike() },
             onTagClicked = this::navigateToSearchFragment,
             onShareClicked = { photo ->
                 Toast.makeText(

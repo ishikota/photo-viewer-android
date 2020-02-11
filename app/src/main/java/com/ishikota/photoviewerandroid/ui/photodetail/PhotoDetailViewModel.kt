@@ -42,4 +42,16 @@ class PhotoDetailViewModel @Inject constructor(
                 _isError.postValue(true)
             }).also { compositeDisposable.add(it) }
     }
+
+    fun toggleLike() {
+        // TODO call api
+        val data = recyclerViewData.value?.toMutableList() ?: return
+        val photoIndex = data.indexOfFirst { it is PhotoDetailAdapter.Item.PhotoItem }
+        val photoItem = data[photoIndex] as PhotoDetailAdapter.Item.PhotoItem
+        val isLiked = photoItem.entity.likedByUser
+
+        val updated = photoItem.entity.copy(likedByUser = !isLiked)
+        data[photoIndex] = PhotoDetailAdapter.Item.PhotoItem(updated)
+        _recyclerViewData.postValue(data)
+    }
 }
