@@ -4,5 +4,6 @@ interface PhotoViewerPreference {
     fun saveSearchSuggestionHistories(histories: List<String>)
     fun getSearchSuggestionHistories(): List<String>
     fun saveBearerToken(token: String)
+    fun deleteBearerToken()
     fun getBearerToken(): String?
 }

@@ -53,6 +53,11 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true  // to suppress  Parcelize error
+    features = ["parcelize"]
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"

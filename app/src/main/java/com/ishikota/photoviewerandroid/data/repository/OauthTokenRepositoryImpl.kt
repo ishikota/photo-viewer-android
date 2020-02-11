@@ -20,6 +20,10 @@ class OauthTokenRepositoryImpl(
             preference.saveBearerToken(result.accessToken)
         }.ignoreElement()
 
+    override fun logout() {
+        preference.deleteBearerToken()
+    }
+
     companion object {
         private const val GRANT_TYPE = "authorization_code"
     }

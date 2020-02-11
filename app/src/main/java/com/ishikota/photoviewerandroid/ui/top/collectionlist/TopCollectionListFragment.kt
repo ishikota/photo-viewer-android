@@ -99,10 +99,7 @@ class TopCollectionListFragment : Fragment(), TabElement {
     }
 
     private fun navigateToUserDetail(user: User) {
-        val action = TopFragmentDirections.actionTopFragmentToUserDetailFragment(
-            user.userName,
-            user.name
-        )
+        val action = TopFragmentDirections.actionTopFragmentToUserDetailFragment(user = user)
         findNavController().navigate(action)
     }
 }

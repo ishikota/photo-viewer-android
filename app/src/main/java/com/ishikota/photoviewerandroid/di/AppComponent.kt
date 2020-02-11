@@ -3,6 +3,7 @@ package com.ishikota.photoviewerandroid.di
 import com.ishikota.photoviewerandroid.ui.MainActivity
 import com.ishikota.photoviewerandroid.ui.OauthCallbackActivity
 import com.ishikota.photoviewerandroid.ui.collectiondeatil.CollectionDetailComponent
+import com.ishikota.photoviewerandroid.ui.editprofile.EditProfileComponent
 import com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailComponent
 import com.ishikota.photoviewerandroid.ui.search.SearchComponent
 import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListComponent
@@ -43,5 +44,6 @@ interface AppComponent {
     fun userDetailLikedPhotosComponent(): UserDetailLikedPhotosComponent.Factory
     fun searchComponent(): SearchComponent.Factory
     fun searchPhotoListComponent(): SearchPhotoListComponent.Factory
+    fun editProfileComponent(): EditProfileComponent.Factory
     fun inject(activity: OauthCallbackActivity)
 }

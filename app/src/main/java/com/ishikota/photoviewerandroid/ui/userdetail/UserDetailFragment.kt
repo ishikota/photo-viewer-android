@@ -2,16 +2,17 @@ package com.ishikota.photoviewerandroid.ui.userdetail
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
+import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.databinding.UserdetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
@@ -22,7 +23,7 @@ import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLiked
 import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosFragment
 import javax.inject.Inject
 
-class UserDetailFragment: Fragment() {
+class UserDetailFragment : Fragment() {
 
     private val safeArgs: UserDetailFragmentArgs by navArgs()
 
@@ -47,6 +48,7 @@ class UserDetailFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         binding = UserdetailFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -64,14 +66,14 @@ class UserDetailFragment: Fragment() {
         binding.collapsingtoolbarlayout.isTitleEnabled = false
         binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
             if (i == -appBarLayout.totalScrollRange) {   // if completely collapsed
-                binding.toolbar.title = safeArgs.name
+                binding.toolbar.title = safeArgs.user.name
             } else {
                 binding.toolbar.title = ""
             }
         })
 
         binding.userdetailContents.retryButton.setOnClickListener {
-            viewModel.loadUserDetail(safeArgs.username)
+            viewModel.loadUserDetail(safeArgs.user.userName)
         }
 
         viewModel.userDetail.observe(this, NonNullObserver {
@@ -87,7 +89,34 @@ class UserDetailFragment: Fragment() {
             binding.tabLayout.setupWithViewPager(binding.viewPager)
         })
 
-        viewModel.loadUserDetail(safeArgs.username)
+        viewModel.loadUserDetail(safeArgs.user.userName)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (safeArgs.allowEdit) {
+            inflater.inflate(R.menu.user_detail_menu, menu)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.editProfileFragment -> {
+                val user = viewModel.userDetail.value
+                if (user == null) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.user_detail_loading_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val action = UserDetailFragmentDirections
+                        .actionUserDetailFragmentToEditProfileFragment(user)
+                    findNavController().navigate(action)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }

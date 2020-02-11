@@ -122,7 +122,7 @@ class CollectionDetailFragment : Fragment() {
 
     private fun navigateToUserDetail(user: User) {
         val action = CollectionDetailFragmentDirections.
-            actionCollectionDetailFragmentToUserDetailFragment(user.userName, user.name)
+            actionCollectionDetailFragmentToUserDetailFragment(user = user)
         findNavController().navigate(action)
     }
 

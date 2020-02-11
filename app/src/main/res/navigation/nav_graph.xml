@@ -63,15 +63,19 @@
         android:id="@+id/userDetailFragment"
         android:name="com.ishikota.photoviewerandroid.ui.userdetail.UserDetailFragment"
         android:label="UserDetailFragment" >
-        <argument
-            android:name="username"
-            app:argType="string" />
-        <argument
-            android:name="name"
-            app:argType="string" />
         <action
             android:id="@+id/action_userDetailFragment_to_photoDetailFragment"
             app:destination="@id/photoDetailFragment" />
+        <argument
+            android:name="allowEdit"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="user"
+            app:argType="com.ishikota.photoviewerandroid.data.api.entities.User" />
+        <action
+            android:id="@+id/action_userDetailFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -92,4 +96,12 @@
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.ishikota.photoviewerandroid.ui.editprofile.EditProfileFragment"
+        android:label="EditProfileFragment" >
+        <argument
+            android:name="placeholderUser"
+            app:argType="com.ishikota.photoviewerandroid.data.api.entities.User" />
+    </fragment>
 </navigation>

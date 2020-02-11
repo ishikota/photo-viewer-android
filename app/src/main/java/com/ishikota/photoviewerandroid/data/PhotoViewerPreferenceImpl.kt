@@ -20,6 +20,10 @@ class PhotoViewerPreferenceImpl(
         preference.edit { putString(KEY_BEARER_TOKEN, token) }
     }
 
+    override fun deleteBearerToken() {
+        preference.edit { remove(KEY_BEARER_TOKEN) }
+    }
+
     override fun getBearerToken(): String? = preference.getString(KEY_BEARER_TOKEN, null)
 
     companion object {
