@@ -13,11 +13,13 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
+import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.PhotodetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
+import com.ishikota.photoviewerandroid.infra.EventObserver
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import javax.inject.Inject
 
@@ -80,6 +82,9 @@ class PhotoDetailFragment: Fragment() {
 
         viewModel.recyclerViewData.observe(this, NonNullObserver {
             adapter.submitList(it)
+        })
+        viewModel.likeWithoutLoginAlert.observe(this, EventObserver {
+            Toast.makeText(requireContext(), R.string.like_without_login_message, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.loadData(safeArgs.photoId)

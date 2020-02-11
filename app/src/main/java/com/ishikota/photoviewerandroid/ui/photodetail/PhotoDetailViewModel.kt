@@ -2,7 +2,9 @@ package com.ishikota.photoviewerandroid.ui.photodetail
 
 import androidx.lifecycle.*
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
+import com.ishikota.photoviewerandroid.data.repository.OauthTokenRepository
 import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
+import com.ishikota.photoviewerandroid.infra.Event
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -10,6 +12,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PhotoDetailViewModel @Inject constructor(
+    private val oauthTokenRepository: OauthTokenRepository,
     private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
@@ -30,6 +33,9 @@ class PhotoDetailViewModel @Inject constructor(
     private val _isError: MutableLiveData<Boolean> = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
+    private val _likeWithoutLoginAlert: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val likeWithoutLoginAlert: LiveData<Event<Unit>> = _likeWithoutLoginAlert
+
     fun loadData(id: String) {
         photoRepository.getPhoto(id)
             .doOnSubscribe {
@@ -49,6 +55,11 @@ class PhotoDetailViewModel @Inject constructor(
     }
 
     fun toggleLike() {
+        if (!oauthTokenRepository.isLoggedIn()) {
+            _likeWithoutLoginAlert.value = Event(Unit)
+            return
+        }
+
         val photoEntity = photo.value ?: return
         val updateLike = if (photoEntity.likedByUser) {
             photoRepository.unLikePhoto(photoEntity.id)
