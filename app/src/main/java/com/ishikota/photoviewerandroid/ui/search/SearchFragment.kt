@@ -8,8 +8,6 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -21,6 +19,7 @@ import com.ishikota.photoviewerandroid.databinding.SearchFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
+import com.ishikota.photoviewerandroid.infra.dismissKeyboard
 import com.ishikota.photoviewerandroid.ui.search.photolist.SearchPhotoListFragment
 import javax.inject.Inject
 
@@ -68,11 +67,11 @@ class SearchFragment : Fragment() {
             onSuggestionSelected = { suggestion ->
                 binding.editQuery.setText(suggestion)
                 startSearch()
-                dismissKeyboard(binding.editQuery)
+                dismissKeyboard(activity, binding.editQuery)
             },
             onSuggestionLiftRequested = { suggestion ->
                 binding.editQuery.setText(suggestion)
-                dismissKeyboard(binding.editQuery)
+                dismissKeyboard(activity, binding.editQuery)
             }
         )
         binding.recyclerView.adapter = adapter
@@ -92,7 +91,7 @@ class SearchFragment : Fragment() {
         binding.editQuery.setOnEditorActionListener { _, _, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
                 startSearch()
-                dismissKeyboard(binding.editQuery)
+                dismissKeyboard(activity, binding.editQuery)
                 true
             } else {
                 false
@@ -100,7 +99,7 @@ class SearchFragment : Fragment() {
         }
         binding.buttonSearch.setOnClickListener {
             startSearch()
-            dismissKeyboard(binding.editQuery)
+            dismissKeyboard(activity, binding.editQuery)
         }
 
         viewModel.suggestion.observe(this, NonNullObserver {
@@ -116,11 +115,6 @@ class SearchFragment : Fragment() {
             binding.editQuery.setText(it)
             startSearch()
         }
-    }
-
-    private fun dismissKeyboard(editText: EditText) {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        imm?.hideSoftInputFromWindow(editText.windowToken, 0)
     }
 
     private fun startSearch() {

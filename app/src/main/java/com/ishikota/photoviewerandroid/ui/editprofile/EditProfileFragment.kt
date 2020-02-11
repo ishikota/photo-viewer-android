@@ -16,6 +16,7 @@ import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.EventObserver
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
+import com.ishikota.photoviewerandroid.infra.dismissKeyboard
 import javax.inject.Inject
 
 class EditProfileFragment : Fragment() {
@@ -84,6 +85,7 @@ class EditProfileFragment : Fragment() {
                     location = binding.textLocation.text.toString(),
                     bio = binding.bio.text.toString()
                 )
+                dismissKeyboard(activity, binding.bio)
                 true
             }
             else -> super.onOptionsItemSelected(item)
