@@ -4,5 +4,8 @@
     <item
         android:id="@+id/update_profile"
         android:title="@string/update"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout" />
 </menu>

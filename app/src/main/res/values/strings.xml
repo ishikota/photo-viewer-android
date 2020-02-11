@@ -23,11 +23,13 @@
     <string name="account_fetch_failure">Failed to fetch your account info</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="update">UPDATE</string>
+    <string name="logout">LOGOUT</string>
     <string name="name">name</string>
     <string name="location">location</string>
     <string name="bio">bio</string>
     <string name="user_detail_loading_message">Please wait a moment. Loading user data.</string>
     <string name="update_thumbnail_not_supported_message">Sorry, API does not support to update images</string>
+    <string name="logout_message">Logout is completed. Restart app</string>
     <plurals name="photos">
         <item quantity="one">%d photo</item>
         <item quantity="other">%d photos</item>

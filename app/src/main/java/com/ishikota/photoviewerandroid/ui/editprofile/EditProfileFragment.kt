@@ -1,6 +1,7 @@
 package com.ishikota.photoviewerandroid.ui.editprofile
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -17,6 +18,7 @@ import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.EventObserver
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
 import com.ishikota.photoviewerandroid.infra.dismissKeyboard
+import com.ishikota.photoviewerandroid.ui.MainActivity
 import javax.inject.Inject
 
 class EditProfileFragment : Fragment() {
@@ -66,6 +68,12 @@ class EditProfileFragment : Fragment() {
         viewModel.updatedUser.observe(this, NonNullObserver {
             binding.user = it
         })
+        viewModel.navigateAppRestartAction.observe(this, EventObserver {
+            context?.let {
+                Toast.makeText(it, R.string.logout_message, Toast.LENGTH_SHORT).show()
+            }
+            restartApp()
+        })
     }
 
     override fun onCreateView(
@@ -95,7 +103,19 @@ class EditProfileFragment : Fragment() {
                 dismissKeyboard(activity, binding.bio)
                 true
             }
+            R.id.logout -> {
+                viewModel.logout()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun restartApp() {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context?.startActivity(intent)
     }
 }

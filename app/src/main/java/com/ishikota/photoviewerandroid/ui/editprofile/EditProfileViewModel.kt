@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.User
+import com.ishikota.photoviewerandroid.data.repository.OauthTokenRepository
 import com.ishikota.photoviewerandroid.data.repository.UserRepository
 import com.ishikota.photoviewerandroid.infra.Event
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,6 +15,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class EditProfileViewModel @Inject constructor(
+    private val oauthTokenRepository: OauthTokenRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -25,6 +27,9 @@ class EditProfileViewModel @Inject constructor(
 
     private val _updatedUser = MutableLiveData<User>()
     val updatedUser: LiveData<User> = _updatedUser
+
+    private val _navigateAppRestartAction = MutableLiveData<Event<Unit>>()
+    val navigateAppRestartAction: LiveData<Event<Unit>> = _navigateAppRestartAction
 
     @SuppressLint("CheckResult")
     fun updateProfile(firstName: String, lastName: String, location: String, bio: String) {
@@ -43,5 +48,10 @@ class EditProfileViewModel @Inject constructor(
                 Timber.e(error)
                 _errorMessage.value = Event(R.string.login_failure_message)
             })
+    }
+
+    fun logout() {
+        oauthTokenRepository.logout()
+        _navigateAppRestartAction.postValue(Event(Unit))
     }
 }
