@@ -87,6 +87,16 @@
                 tools:text="1124" />
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/like_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:visibleWhen="@{photo.likeUpdating}"
+            app:layout_constraintBottom_toBottomOf="@id/user_container"
+            app:layout_constraintLeft_toRightOf="@id/user_container"
+            app:layout_constraintRight_toLeftOf="@id/download_container"
+            app:layout_constraintTop_toTopOf="@id/user_container"/>
+
         <LinearLayout
             android:id="@+id/download_container"
             android:layout_width="wrap_content"

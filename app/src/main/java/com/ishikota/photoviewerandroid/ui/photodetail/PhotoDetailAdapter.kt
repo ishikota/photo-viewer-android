@@ -64,7 +64,7 @@ class PhotoDetailAdapter(
     }
 
     sealed class Item {
-        data class PhotoItem(val entity: Photo) : Item()
+        data class PhotoItem(val entity: Photo, val isLikeUpdating: Boolean = false) : Item()
         data class DescriptionItem(val description: String, val isAlt: Boolean) : Item()
         data class TagsItem(val tags: List<Photo.Tag>) : Item()
         data class CollectionItem(val entity: Collection) : Item()
@@ -79,7 +79,7 @@ class PhotoDetailAdapter(
 
         fun bind(item: Item.PhotoItem) {
             binding.userContainer.setOnClickListener {
-                onUserClicked(item.entity.user)
+                item.entity.user?.let { onUserClicked(it) }
             }
             binding.likeContainer.setOnClickListener {
                 onLikeToggled()

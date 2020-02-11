@@ -3,10 +3,7 @@ package com.ishikota.photoviewerandroid.data.api
 import com.ishikota.photoviewerandroid.data.api.entities.*
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface PhotoViewerService {
 
@@ -22,6 +19,16 @@ interface PhotoViewerService {
     fun getPhoto(
         @Path("id") id: String
     ): Single<Photo>
+
+    @POST("/photos/{id}/like")
+    fun likePhoto(
+        @Path("id") id: String
+    ): Single<PhotoLikeResult>
+
+    @DELETE("/photos/{id}/like")
+    fun unLikePhoto(
+        @Path("id") id: String
+    ): Single<PhotoLikeResult>
 
     @GET("/collections")
     fun getCollections(

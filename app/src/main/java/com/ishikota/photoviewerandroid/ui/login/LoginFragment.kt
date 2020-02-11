@@ -26,6 +26,6 @@ class LoginFragment : Fragment() {
 
     companion object {
         const val REDIRECT_URI = "ishikota://mysite.com/callback"
-        private const val SCOPE = "public+read_user+write_user"
+        private const val SCOPE = "public+read_user+write_user+write_likes"
     }
 }
