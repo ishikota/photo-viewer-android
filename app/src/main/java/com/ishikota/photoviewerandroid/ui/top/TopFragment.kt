@@ -17,10 +17,6 @@ import com.ishikota.photoviewerandroid.databinding.TopFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.EventObserver
-import com.ishikota.photoviewerandroid.infra.TabElement
-import com.ishikota.photoviewerandroid.infra.attachTabLayoutAdapter
-import com.ishikota.photoviewerandroid.ui.top.collectionlist.TopCollectionListFragment
-import com.ishikota.photoviewerandroid.ui.top.photolist.TopPhotoListFragment
 import javax.inject.Inject
 
 class TopFragment : Fragment() {
@@ -67,11 +63,7 @@ class TopFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        val tabs = listOf<TabElement>(
-            TopPhotoListFragment(),
-            TopCollectionListFragment()
-        )
-        binding.viewPager.attachTabLayoutAdapter(tabs, childFragmentManager)
+        binding.viewPager.adapter = TopPagerAdapter(requireContext(), childFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         viewModel.navigateToLogin.observe(this, EventObserver {

@@ -2,16 +2,10 @@ package com.ishikota.photoviewerandroid.ui.userdetail.postedphotos
 
 import android.content.Context
 import android.os.Bundle
-import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.di.appComponent
-import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailPhotoListFragment
 
-class UserDetailPostedPhotosFragment : UserDetailPhotoListFragment(), TabElement {
-
-    override val title: Int? = R.string.posted
-
-    override val iconResId: Int? = null
+class UserDetailPostedPhotosFragment : UserDetailPhotoListFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

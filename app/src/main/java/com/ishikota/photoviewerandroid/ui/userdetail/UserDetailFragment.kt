@@ -17,10 +17,6 @@ import com.ishikota.photoviewerandroid.databinding.UserdetailFragmentBinding
 import com.ishikota.photoviewerandroid.di.ViewModelFactory
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
-import com.ishikota.photoviewerandroid.infra.TabElement
-import com.ishikota.photoviewerandroid.infra.attachTabLayoutAdapter
-import com.ishikota.photoviewerandroid.ui.userdetail.likedphotos.UserDetailLikedPhotosFragment
-import com.ishikota.photoviewerandroid.ui.userdetail.postedphotos.UserDetailPostedPhotosFragment
 import javax.inject.Inject
 
 class UserDetailFragment : Fragment() {
@@ -76,17 +72,20 @@ class UserDetailFragment : Fragment() {
             viewModel.loadUserDetail(safeArgs.user.userName)
         }
 
-        viewModel.userDetail.observe(this, NonNullObserver {
-            binding.user = it
-            val tabs = mutableListOf<TabElement>()
-            if (it.totalPhotos != 0) {
-                tabs.add(UserDetailPostedPhotosFragment.createInstance(it.userName))
+        viewModel.userDetail.observe(this, NonNullObserver { user ->
+            context?.let { context ->
+                binding.user = user
+                val contents = mutableListOf<UserDetailPagerAdapter.Contents>()
+                if (user.totalPhotos != 0) {
+                    contents.add(UserDetailPagerAdapter.Contents.POSTED_PHOTOS)
+                }
+                if (user.totalLikes != 0) {
+                    contents.add(UserDetailPagerAdapter.Contents.LIKED_PHOTOS)
+                }
+                binding.viewPager.adapter =
+                    UserDetailPagerAdapter(user.userName, contents, context, childFragmentManager)
+                binding.tabLayout.setupWithViewPager(binding.viewPager)
             }
-            if (it.totalLikes != 0) {
-                tabs.add(UserDetailLikedPhotosFragment.createInstance(it.userName))
-            }
-            binding.viewPager.attachTabLayoutAdapter(tabs, childFragmentManager)
-            binding.tabLayout.setupWithViewPager(binding.viewPager)
         })
 
         viewModel.loadUserDetail(safeArgs.user.userName)
