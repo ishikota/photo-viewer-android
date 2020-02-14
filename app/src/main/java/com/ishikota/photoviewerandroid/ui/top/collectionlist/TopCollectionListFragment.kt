@@ -9,13 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.CollectionlistFragmentBinding
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
-import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
 import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListAdapter
@@ -24,11 +22,7 @@ import com.ishikota.photoviewerandroid.ui.collectionlist.CollectionListViewModel
 import com.ishikota.photoviewerandroid.ui.top.TopFragmentDirections
 import javax.inject.Inject
 
-class TopCollectionListFragment : Fragment(), TabElement {
-
-    override val title: Int? = R.string.top_tab_collection
-
-    override val iconResId: Int? = null
+class TopCollectionListFragment : Fragment() {
 
     private lateinit var binding: CollectionlistFragmentBinding
 

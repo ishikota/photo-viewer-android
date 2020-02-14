@@ -15,7 +15,6 @@ import com.ishikota.photoviewerandroid.data.repository.PhotoRepository
 import com.ishikota.photoviewerandroid.databinding.PhotolistFragmentBinding
 import com.ishikota.photoviewerandroid.di.appComponent
 import com.ishikota.photoviewerandroid.infra.NonNullObserver
-import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.infra.paging.PagingNetworkState
 import com.ishikota.photoviewerandroid.infra.paging.Status
 import com.ishikota.photoviewerandroid.ui.photolist.PhotoListAdapter
@@ -24,11 +23,7 @@ import com.ishikota.photoviewerandroid.ui.photolist.PhotoListViewModel
 import com.ishikota.photoviewerandroid.ui.top.TopFragmentDirections
 import javax.inject.Inject
 
-class TopPhotoListFragment : Fragment(), TabElement {
-
-    override val title: Int? = R.string.top_tab_photo
-
-    override val iconResId: Int? = null
+class TopPhotoListFragment : Fragment() {
 
     private lateinit var binding: PhotolistFragmentBinding
 

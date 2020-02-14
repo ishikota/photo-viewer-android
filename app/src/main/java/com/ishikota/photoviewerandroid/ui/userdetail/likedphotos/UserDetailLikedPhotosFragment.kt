@@ -2,16 +2,10 @@ package com.ishikota.photoviewerandroid.ui.userdetail.likedphotos
 
 import android.content.Context
 import android.os.Bundle
-import com.ishikota.photoviewerandroid.R
 import com.ishikota.photoviewerandroid.di.appComponent
-import com.ishikota.photoviewerandroid.infra.TabElement
 import com.ishikota.photoviewerandroid.ui.userdetail.UserDetailPhotoListFragment
 
-class UserDetailLikedPhotosFragment : UserDetailPhotoListFragment(), TabElement {
-
-    override val title: Int? = R.string.liked
-
-    override val iconResId: Int? = null
+class UserDetailLikedPhotosFragment : UserDetailPhotoListFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
