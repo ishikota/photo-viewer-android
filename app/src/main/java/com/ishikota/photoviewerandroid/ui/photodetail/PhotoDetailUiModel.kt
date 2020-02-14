@@ -8,8 +8,9 @@ data class PhotoDetailUiModel(
 ) {
 
     fun toRecyclerViewData(): List<PhotoDetailAdapter.Item> {
-        val items = mutableListOf<PhotoDetailAdapter.Item>(
-            PhotoDetailAdapter.Item.PhotoItem(photo, isLikeUpdating)
+        val items = mutableListOf(
+            PhotoDetailAdapter.Item.ImageItem(photo.urls.regular),
+            PhotoDetailAdapter.Item.PhotoInfoItem(photo, isLikeUpdating)
         )
         photo.description?.let {
             items.add(PhotoDetailAdapter.Item.DescriptionItem(it, isAlt = false))
@@ -19,9 +20,6 @@ data class PhotoDetailUiModel(
         }
         if (photo.tags?.isNotEmpty() == true) {
             items.add(PhotoDetailAdapter.Item.TagsItem(photo.tags!!))
-        }
-        photo.currentUserCollections.forEach { collection ->
-            items.add(PhotoDetailAdapter.Item.CollectionItem(collection))
         }
         return items
     }

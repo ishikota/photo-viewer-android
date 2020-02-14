@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.ishikota.photoviewerandroid.R
-import com.ishikota.photoviewerandroid.data.api.entities.Collection
 import com.ishikota.photoviewerandroid.data.api.entities.Photo
 import com.ishikota.photoviewerandroid.data.api.entities.User
 import com.ishikota.photoviewerandroid.databinding.PhotodetailDescriptionViewHolderBinding
-import com.ishikota.photoviewerandroid.databinding.PhotodetailPhotoViewHolderBinding
+import com.ishikota.photoviewerandroid.databinding.PhotodetailImageViewHolderBinding
+import com.ishikota.photoviewerandroid.databinding.PhotodetailPhotoInfoViewHolderBinding
 import com.ishikota.photoviewerandroid.databinding.PhotodetailTagsViewHolderBinding
 
 class PhotoDetailAdapter(
@@ -24,16 +24,21 @@ class PhotoDetailAdapter(
 ) : ListAdapter<PhotoDetailAdapter.Item, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
-        is Item.PhotoItem -> R.layout.photodetail_photo_view_holder
+        is Item.ImageItem -> R.layout.photodetail_image_view_holder
+        is Item.PhotoInfoItem -> R.layout.photodetail_photo_info_view_holder
         is Item.DescriptionItem -> R.layout.photodetail_description_view_holder
         is Item.TagsItem -> R.layout.photodetail_tags_view_holder
-        is Item.CollectionItem -> R.layout.photodetail_photo_view_holder
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.photodetail_photo_view_holder -> PhotoViewHolder(
-                PhotodetailPhotoViewHolderBinding.inflate(
+            R.layout.photodetail_image_view_holder -> ImageViewHolder(
+                PhotodetailImageViewHolderBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+            R.layout.photodetail_photo_info_view_holder -> PhotoInfoViewHolder(
+                PhotodetailPhotoInfoViewHolderBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
                 onUserClicked,
@@ -57,37 +62,48 @@ class PhotoDetailAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when {
-            holder is PhotoViewHolder && item is Item.PhotoItem -> holder.bind(item)
+            holder is ImageViewHolder && item is Item.ImageItem -> holder.bind(item)
+            holder is PhotoInfoViewHolder && item is Item.PhotoInfoItem -> holder.bind(item)
             holder is DescriptionViewHolder && item is Item.DescriptionItem -> holder.bind(item)
             holder is TagsViewHolder && item is Item.TagsItem -> holder.bind(item)
         }
     }
 
     sealed class Item {
-        data class PhotoItem(val entity: Photo, val isLikeUpdating: Boolean = false) : Item()
+        data class ImageItem(val url: String) : Item()
+        data class PhotoInfoItem(val photo: Photo, val isLikeUpdating: Boolean = false) : Item()
         data class DescriptionItem(val description: String, val isAlt: Boolean) : Item()
         data class TagsItem(val tags: List<Photo.Tag>) : Item()
-        data class CollectionItem(val entity: Collection) : Item()
     }
 
-    private class PhotoViewHolder(
-        private val binding: PhotodetailPhotoViewHolderBinding,
+    private class ImageViewHolder(
+        private val binding: PhotodetailImageViewHolderBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: Item.ImageItem) {
+            binding.image = item
+            binding.executePendingBindings()
+        }
+    }
+
+    private class PhotoInfoViewHolder(
+        private val binding: PhotodetailPhotoInfoViewHolderBinding,
         private val onUserClicked: (User) -> Unit,
         private val onLikeToggled: () -> Unit,
         private val onShareClicked: (Photo) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Item.PhotoItem) {
+        fun bind(item: Item.PhotoInfoItem) {
             binding.userContainer.setOnClickListener {
-                item.entity.user?.let { onUserClicked(it) }
+                item.photo.user?.let { onUserClicked(it) }
             }
             binding.likeContainer.setOnClickListener {
                 onLikeToggled()
             }
             binding.iconShare.setOnClickListener {
-                onShareClicked(item.entity)
+                onShareClicked(item.photo)
             }
-            binding.photo = item
+            binding.item = item
             binding.executePendingBindings()
         }
     }
@@ -127,14 +143,14 @@ class PhotoDetailAdapter(
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
             override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean = when {
-                oldItem is Item.PhotoItem && newItem is Item.PhotoItem ->
-                    oldItem.entity.id == newItem.entity.id
+                oldItem is Item.ImageItem && newItem is Item.ImageItem ->
+                    oldItem.url == newItem.url
+                oldItem is Item.PhotoInfoItem && newItem is Item.PhotoInfoItem ->
+                    oldItem == newItem
                 oldItem is Item.DescriptionItem && newItem is Item.DescriptionItem ->
                     oldItem.description == newItem.description
                 oldItem is Item.TagsItem && newItem is Item.TagsItem ->
                     oldItem.tags == newItem.tags
-                oldItem is Item.CollectionItem && newItem is Item.CollectionItem ->
-                    oldItem.entity == newItem.entity
                 else -> false
             }
 

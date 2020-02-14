@@ -6,27 +6,13 @@
     <data>
 
         <variable
-            name="photo"
-            type="com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailAdapter.Item.PhotoItem" />
+            name="item"
+            type="com.ishikota.photoviewerandroid.ui.photodetail.PhotoDetailAdapter.Item.PhotoInfoItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/photo_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/photo"
-            android:foreground="?android:selectableItemBackground"
-            app:imageFromUrl="@{photo.entity.urls.regular}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_height="200dp"
-            tools:scaleType="centerCrop"
-            tools:src="@tools:sample/avatars" />
 
         <LinearLayout
             android:id="@+id/user_container"
@@ -36,7 +22,7 @@
             android:orientation="vertical"
             android:padding="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/photo_image"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -45,16 +31,15 @@
                 android:layout_height="64dp"
                 android:contentDescription="@string/photo"
                 app:clipToCircle="@{true}"
-                app:imageFromUrl="@{photo.entity.user.profileImage.medium}"
+                app:imageFromUrl="@{item.photo.user.profileImage.medium}"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/photo_image"
                 tools:src="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{photo.entity.user.userName}"
+                android:text="@{item.photo.user.userName}"
                 tools:text="@tools:sample/full_names" />
 
         </LinearLayout>
@@ -75,14 +60,14 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_favorite_black_24dp"
-                android:tint="@{photo.entity.likedByUser ? @color/like_heart_active : @color/like_heart_inactive}"
+                android:tint="@{item.photo.likedByUser ? @color/like_heart_active : @color/like_heart_inactive}"
                 android:contentDescription="@string/icon" />
 
             <TextView
                 android:id="@+id/like_count_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Integer.toString(photo.entity.likes)}"
+                android:text="@{Integer.toString(item.photo.likes)}"
                 android:textSize="14sp"
                 tools:text="1124" />
         </LinearLayout>
@@ -91,7 +76,7 @@
             android:id="@+id/like_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:visibleWhen="@{photo.likeUpdating}"
+            app:visibleWhen="@{item.likeUpdating}"
             app:layout_constraintBottom_toBottomOf="@id/user_container"
             app:layout_constraintLeft_toRightOf="@id/user_container"
             app:layout_constraintRight_toLeftOf="@id/download_container"
@@ -119,7 +104,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Integer.toString(photo.entity.downloads)}"
+                android:text="@{Integer.toString(item.photo.downloads)}"
                 android:textSize="14sp"
                 tools:text="1124" />
         </LinearLayout>
