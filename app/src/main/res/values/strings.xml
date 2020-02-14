@@ -30,6 +30,7 @@
     <string name="user_detail_loading_message">Please wait a moment. Loading user data.</string>
     <string name="update_thumbnail_not_supported_message">Sorry, API does not support to update images</string>
     <string name="logout_message">Logout is completed. Restart app</string>
+    <string name="like_without_login_message">Please login to like a photo.</string>
     <plurals name="photos">
         <item quantity="one">%d photo</item>
         <item quantity="other">%d photos</item>

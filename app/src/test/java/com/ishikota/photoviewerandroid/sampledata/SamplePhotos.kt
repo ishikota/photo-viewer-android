@@ -20,6 +20,7 @@ private val photoJson =
             "height":5462,
             "color":"#F7FBFD",
             "likes":219,
+            "liked_by_user":false,
             "alt_description":"man on black cruiser motorcycle in highway",
             "current_user_collections": [
                 {
@@ -49,6 +50,7 @@ private val photoJson =
                         "height":5462,
                         "color":"#F7FBFD",
                         "likes":219,
+                        "liked_by_user":false,
                         "alt_description":"man on black cruiser motorcycle in highway",
                         "urls":{
                             "raw":"https://images.unsplash.com/photo-1558980394-0a06c4631733?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEwNzMzM30",
