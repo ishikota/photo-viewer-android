@@ -36,7 +36,7 @@ So you need to register this api to get accesskey and  secretkey :(
 If you get your  accesskey and  secretkey, create `secret.properties` file in project root like following.
 
 ```
-accesskey={your access key  comes here}
+accesskey={your access key comes here}
 secretkey={your secret key comes here}
 ```
 
